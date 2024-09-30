@@ -1,0 +1,25 @@
+
+<resources>
+    <string name="app_name">Aplicaciones de Microsoft Office  </string>
+    <string name="attention">Atención </string>
+    <string name="back_button">Back</string>
+    <string name="delete">Eliminar </string>
+    <string name="delete_question">Estás seguro que lo quieres eliminar ?</string>
+    <string name="no_item_description">No hay ningún elemento en la base de datos por favor añada uno .</string>
+    <string name="edit_item_title">Editar datos </string>
+    <string name="item">Aplicación </string>
+    <string name="item_detail_title">Aplicación de Microsoft </string>
+    <string name="item_entry_title">Ingrese su aplicacion</string>
+    <string name="item_name_req">Nombre de la aplicación  *</string>
+    <string name="item_price_req">Costo  </string>
+    <string name="no">No</string>
+    <string name="price">Costo </string>
+    <string name="quantity_in_stock"> Fecha de creación </string>
+    <string name="in_stock">%d </string>
+    <string name="quantity_req">Año de lanzamiento*</string>
+    <string name="descripcion">descripcion*</string>
+    <string name="save_action">Guardar</string>
+    <string name="sell">Modificar </string>
+    <string name="yes">Si</string>
+    <string name="required_fields">Por favor complete los campos</string>
+</resources>
