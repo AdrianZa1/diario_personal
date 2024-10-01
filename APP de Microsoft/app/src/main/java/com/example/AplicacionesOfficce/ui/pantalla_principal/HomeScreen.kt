@@ -3,6 +3,7 @@ package com.example.inventory.ui.pantalla_principal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -10,21 +11,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Icon
+import androidx.compose.ui.unit.dp
 import com.example.AplicacionesOfficce.ui.pantalla_principal.MainViewModel
 
 
 // Pantalla principal
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel = viewModel()) {
+fun MainScreen(viewModel: MainViewModel) {
     Scaffold(
         topBar = { MainTopAppBar(onBackClick = { /* Handle back action */ }) }
     ) { paddingValues ->
@@ -70,7 +65,7 @@ fun MainTopAppBar(onBackClick: () -> Unit) {
         title = { Text(text = "Home") },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
             }
         }
     )
@@ -95,11 +90,4 @@ fun MainBottomBar(onHomeClick: () -> Unit, onPinClick: () -> Unit, onChatClick: 
             Icon(Icons.Filled.Email, contentDescription = "Chat")
         }
     }
-}
-
-// Vista previa de la pantalla principal
-@Preview(showBackground = true)
-@Composable
-fun PreviewMainScreen() {
-    MainScreen()
 }
