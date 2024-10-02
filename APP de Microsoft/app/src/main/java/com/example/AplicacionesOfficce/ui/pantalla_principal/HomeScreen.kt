@@ -18,8 +18,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -83,33 +84,29 @@ fun MainScreen(
 @Composable
 fun MainTopAppBar(
     onBackClick: () -> Unit,
-    onAddToFavoritesClick: () -> Unit,
-    currentTime: String,
-    currentDate: String
+    onAddToFavoritesClick: () -> Unit, // Añadir a favoritos
+    currentTime: String, // Hora actual
+    currentDate: String // Fecha actual
 ) {
-    SmallTopAppBar(
-        { Text(text = "Título", color = Color(0xFF607D8B)) }, navigationIcon = {
+    TopAppBar(
+        title = { Text(text = "Título", color = Color(0xFF607D8B)) }, // Texto gris oscuro
+        navigationIcon = {
             IconButton(onClick = onBackClick) {
-                Icon(
-                    Icons.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = Color(0xFF607D8B)
-                )
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = Color(0xFF607D8B)) // Icono gris oscuro
             }
         },
         actions = {
             IconButton(onClick = onAddToFavoritesClick) {
-                Icon(
-                    Icons.Filled.Star,
-                    contentDescription = "Añadir a destacados",
-                    tint = Color(0xFF607D8B)
-                )
+                Icon(Icons.Filled.Star, contentDescription = "Añadir a destacados", tint = Color(0xFF607D8B)) // Icono gris oscuro
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = currentDate, color = Color(0xFF607D8B)) // Fecha gris oscuro
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = currentTime, color = Color(0xFF607D8B)) // Hora gris oscuro
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color.White // Fondo blanco para el AppBar
+        )
     )
 }
 
