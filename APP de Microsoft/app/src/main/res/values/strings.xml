@@ -1,9 +1,13 @@
 
 <resources>
-    <string name="app_name">Aplicaciones de Microsoft Office  </string>
+    <string name="app_name">Diario Personal  </string>
     <string name="attention">Atención </string>
     <string name="back_button">Back</string>
     <string name="delete">Eliminar </string>
+    <string name="login_title">Aplicaciones de Microsoft Office  </string>
+    <string name="register_title">Atención </string>
+    <string name="home_title">Back</string>
+
     <string name="delete_question">Estás seguro que lo quieres eliminar ?</string>
     <string name="no_item_description">No hay ningún elemento en la base de datos por favor añada uno .</string>
     <string name="edit_item_title">Editar datos </string>
