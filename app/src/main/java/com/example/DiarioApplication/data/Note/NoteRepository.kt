@@ -6,19 +6,19 @@ import kotlinx.coroutines.flow.Flow
  * Repository for managing [Note] objects.
  */
 class NoteRepository(private val noteDao: NoteDao) {
-
     // Insertar una nota
-    suspend fun insertNote(nota: Note) {
-        noteDao.insertNote(nota)
+    suspend fun insertNote(note: Note) {
+        noteDao.insertNote(note)
     }
 
-    // Obtener todas las notas (no necesita ser suspendida)
+    // Obtener todas las notas
     fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes()
     }
 
     // Eliminar una nota por ID
-    suspend fun deleteNoteById(notaId: Int) {
-        noteDao.deleteNoteById(notaId)
+    suspend fun deleteNoteById(noteId: Int) {
+        noteDao.deleteNoteById(noteId)
     }
 }
+

@@ -19,6 +19,7 @@ package com.example.DiarioApplication
 import UserContainer
 import UserDataContainer
 import android.app.Application
+import com.example.DiarioApplication.data.Note.DefaultAppContainer
 
 
 class DiarioApplication : Application() {
@@ -31,5 +32,7 @@ class DiarioApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         container = UserDataContainer(this)
+        container = DefaultAppContainer(this)
     }
+
 }

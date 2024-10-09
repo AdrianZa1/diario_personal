@@ -1,25 +1,25 @@
 package com.example.DiarioApplication.data.Note
 
-import UserContainer
+import android.app.Application
 import android.content.Context
-import androidx.room.Room
-import com.example.inventory.data.UserRepository
 
 interface AppContainer {
-    val noteRepository: NoteRepository
+    val noteRepository: NoteRepository // Verifica que esta línea esté presente
 }
 
-class NoteAppContainer(context: Context, override val itemsRepository: UserRepository) : AppContainer, UserContainer {
-
-    private val database: NoteDatabase by lazy {
-        Room.databaseBuilder(
-            context.applicationContext,
-            NoteDatabase::class.java,
-            "note_database"
-        ).build()
-    }
-
+class DefaultAppContainer(context: Context) : AppContainer {
     override val noteRepository: NoteRepository by lazy {
-        NoteRepository(database.noteDao())
+        NoteRepository(NoteDatabase.getDatabase(context).noteDao())
     }
 }
+
+
+class NoteAppContainer : Application() {
+    lateinit var container: AppContainer
+
+    override fun onCreate() {
+        super.onCreate()
+        container = DefaultAppContainer(this) // Inicializa el contenedor aquí
+    }
+}
+

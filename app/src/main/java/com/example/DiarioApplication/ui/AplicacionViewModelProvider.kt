@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.DiarioApplication.DiarioApplication
 import com.example.DiarioApplication.ui.pantalla_principal.HomeViewModel
-
+import com.example.DiarioApplication.data.Note.NoteRepository
 import com.example.inventory.ui.item.UserEntryViewModel
 
 /**
@@ -23,7 +23,7 @@ object AppViewModelProvider {
         }
         // Initializer for MainViewModel
         initializer {
-            HomeViewModel(inventoryApplication().container.noteRepository)
+            HomeViewModel(inventoryApplication().container.)
         }
 
     }
