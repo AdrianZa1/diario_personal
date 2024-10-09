@@ -31,12 +31,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.example.DiarioApplication.data.Note.NoteRepository
+import com.example.DiarioApplication.ui.navigation.InventoryNavHost
 import com.example.DiarioApplication.ui.theme.InventoryTheme
 import com.example.inventory.R
 import kotlinx.coroutines.delay
-
 class MainActivity : ComponentActivity() {
-    private lateinit var repository: NoteRepository // Declarar el repositorio
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,12 +47,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    SplashScreen {
-                        com.example.inventory.ui.navigation.InventoryNavHost(
-                            navController = navController,
-                            repository = repository // Pasar el repositorio aquí
-                        )
-                    }
+                    // Llama a la función InventoryNavHost y le pasa el navController
+                    InventoryNavHost(
+                        navController = navController
+                    )
                 }
             }
         }

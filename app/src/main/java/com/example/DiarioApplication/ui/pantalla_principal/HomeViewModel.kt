@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class HomeViewModel(private val repository: NoteRepository) : ViewModel() {
 
-    // Cambia la definición de notes para que use el flujo de datos
+    // Flujo de notas desde el repositorio
     val notes: StateFlow<List<Note>> = repository.getAllNotes()
         .stateIn(
             scope = viewModelScope,
@@ -44,31 +44,24 @@ class HomeViewModel(private val repository: NoteRepository) : ViewModel() {
         }
     }
 
-    // Función para manejar el clic en la pantalla de inicio
-    fun onHomeClick() {
-        // Aquí puedes navegar a la pantalla de inicio
-        // Dependiendo de cómo manejes la navegación en tu aplicación
-    }
-
     // Alternar el estado de fijar de la nota
     fun onPinClick(note: Note) {
         viewModelScope.launch {
-            val updatedNote = note.copy(isPinned = !note.isPinned) // Alternar el estado de fijar
-            repository.insertNote(updatedNote) // Guarda la nota actualizada
+            val updatedNote = note.copy(isPinned = !note.isPinned)
+            repository.insertNote(updatedNote)
         }
     }
 
     // Alternar el estado de favorito de la nota
     fun onAddToFavoritesClick(note: Note) {
         viewModelScope.launch {
-            val updatedNote = note.copy(isFavorite = !note.isFavorite) // Alternar el estado de favorito
-            repository.insertNote(updatedNote) // Guarda la nota actualizada
+            val updatedNote = note.copy(isFavorite = !note.isFavorite)
+            repository.insertNote(updatedNote)
         }
     }
 
-    // Función para abrir la cámara o la galería
+    // Función para abrir la cámara o la galería para añadir una imagen
     fun onImageClick(activity: Activity) {
-        // Abre la cámara o la galería
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (intent.resolveActivity(activity.packageManager) != null) {
             activity.startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
@@ -79,4 +72,5 @@ class HomeViewModel(private val repository: NoteRepository) : ViewModel() {
         const val REQUEST_IMAGE_CAPTURE = 1
     }
 }
+
 

@@ -1,23 +1,19 @@
-package com.example.inventory.ui.navigation
+package com.example.DiarioApplication.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.DiarioApplication.data.Note.NoteRepository
+
+import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
 import com.example.inventory.ui.inicio_sesion.LoginScreen
 import com.example.inventory.ui.inicio_sesion.RegisterScreen
 
-
-/**
- * Provides Navigation graph for the application.
- */
 @Composable
 fun InventoryNavHost(
     navController: NavHostController,
-    repository: NoteRepository, // Agregar este parámetro
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
@@ -40,6 +36,11 @@ fun InventoryNavHost(
                 onNavigateToLogin = { navController.navigate("login") }
             )
         }
+        composable("home") { // Nueva navegación a la pantalla Home sin ViewModel
+            HomeScreen(
+                // Aquí puedes pasar funciones o parámetros necesarios
+                onNavigateToHome = { navController.navigate("home") }
+            )
+        }
     }
 }
-
