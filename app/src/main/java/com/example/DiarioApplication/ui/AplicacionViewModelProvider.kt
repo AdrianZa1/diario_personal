@@ -8,7 +8,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.DiarioApplication.DiarioApplication
 import com.example.DiarioApplication.ui.pantalla_principal.HomeViewModel
-import com.example.DiarioApplication.data.Note.NoteRepository
 import com.example.inventory.ui.item.UserEntryViewModel
 
 /**
@@ -17,17 +16,20 @@ import com.example.inventory.ui.item.UserEntryViewModel
 object AppViewModelProvider {
     val Factory = viewModelFactory {
 
-        // Initializer for ItemEntryViewModel
+        // Initializer for UserEntryViewModel
         initializer {
-            UserEntryViewModel(inventoryApplication().container.itemsRepository)
-        }
-        // Initializer for MainViewModel
-        initializer {
-            HomeViewModel(inventoryApplication().container.)
+            val appContainer = inventoryApplication().container
+            UserEntryViewModel(appContainer.userRepository)
         }
 
+        // Initializer for HomeViewModel
+        initializer {
+            val appContainer = inventoryApplication().container
+            HomeViewModel(appContainer.noteRepository)
+        }
     }
 }
+
 
 /**
  * Extension function to queries for [Application] object and returns an instance of

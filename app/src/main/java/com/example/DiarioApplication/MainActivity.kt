@@ -30,13 +30,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import com.example.DiarioApplication.data.Note.NoteRepository
 import com.example.DiarioApplication.ui.theme.InventoryTheme
 import com.example.inventory.R
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
+    private lateinit var repository: NoteRepository // Declarar el repositorio
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             InventoryTheme {
                 Surface(
@@ -45,7 +49,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     SplashScreen {
-                        com.example.inventory.ui.navigation.InventoryNavHost(navController = navController)
+                        com.example.inventory.ui.navigation.InventoryNavHost(
+                            navController = navController,
+                            repository = repository // Pasar el repositorio aquí
+                        )
                     }
                 }
             }
@@ -73,7 +80,7 @@ fun SplashScreen(onTimeout: @Composable () -> Unit) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 // Ícono de la app
                 Image(
-                    painter = painterResource(id = R.mipmap.ic_diario), // Asegúrate de tener este recurso
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Asegúrate de tener este recurso
                     contentDescription = "App Icon",
                     modifier = Modifier.size(128.dp)
                 )

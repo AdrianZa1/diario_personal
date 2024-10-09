@@ -5,6 +5,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -14,6 +16,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -32,6 +35,8 @@ fun LoginScreen(
             style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(32.dp))
+
+        // Campo de texto para el correo electrónico
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -39,22 +44,46 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
+
+        // Campo de texto para la contraseña
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Contraseña") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation() // Para ocultar la contraseña
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Mensaje de error si las credenciales son incorrectas
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
+        // Botón para iniciar sesión
         Button(
-            onClick = onLoginSuccess,
+            onClick = {
+                // Validación simple de credenciales
+                if (email.isNotBlank() && password.isNotBlank()) {
+                    // Aquí puedes agregar la lógica de autenticación
+                    // Si el inicio de sesión es exitoso:
+                    onLoginSuccess()
+                } else {
+                    errorMessage = "Por favor, ingrese un correo y contraseña válidos."
+                }
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Iniciar sesión")
         }
         Spacer(modifier = Modifier.height(8.dp))
+
+        // Botón para navegar a la pantalla de registro
         TextButton(onClick = onNavigateToRegister) {
             Text("¿No tienes cuenta? Regístrate")
         }

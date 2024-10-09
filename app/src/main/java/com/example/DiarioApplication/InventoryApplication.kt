@@ -16,23 +16,19 @@
 
 package com.example.DiarioApplication
 
-import UserContainer
-import UserDataContainer
+import AppContainer
+import DefaultAppContainer
 import android.app.Application
-import com.example.DiarioApplication.data.Note.DefaultAppContainer
+
 
 
 class DiarioApplication : Application() {
 
-    /**
-     * AppContainer instance used by the rest of classes to obtain dependencies
-     */
-    lateinit var container: UserContainer
+     lateinit var container: AppContainer
 
     override fun onCreate() {
         super.onCreate()
-        container = UserDataContainer(this)
-        container = DefaultAppContainer(this)
+        container = DefaultAppContainer(this) // Inicializa el contenedor unificado aquí
     }
 
 }
