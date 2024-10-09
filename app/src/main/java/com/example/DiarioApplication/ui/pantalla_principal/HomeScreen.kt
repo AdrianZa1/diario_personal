@@ -1,8 +1,11 @@
 package com.example.DiarioApplication.ui.pantalla_principal
 
 
+import CameraViewModel
 import android.app.Activity
+import android.provider.MediaStore
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,7 +50,7 @@ import com.example.inventory.ui.AppViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
+import android.graphics.BitmapFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,17 +127,23 @@ fun NoteItem(
     }
 }
 
+
+
 @Composable
 fun HomeScreen(
+    onImageClick: () -> Unit,
     onNavigateToHome: () -> Unit,
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    cameraViewModel: CameraViewModel = viewModel()  // Para manejar la imagen
 ) {
     val currentTime = remember { getCurrentTime() }
     val currentDate = remember { getCurrentDate() }
 
-
     var newNoteTitle by remember { mutableStateOf("") }
     var newNoteContent by remember { mutableStateOf("") }
+
+    // Observar la ruta de la imagen guardada
+    val imagePath by cameraViewModel.imagePath.collectAsState()
 
     Scaffold(
         topBar = {
@@ -152,30 +162,29 @@ fun HomeScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Título más arriba y sin fondo
-            Spacer(modifier = Modifier.height(8.dp)) // Puedes ajustar la altura para moverlo más arriba
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Título de la nota
             TextField(
                 value = newNoteTitle,
                 onValueChange = { newNoteTitle = it },
-                placeholder = { Text("Título de la Nota") }, // Añade un placeholder en lugar de label
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(BorderStroke(0.dp, Color.Transparent)) // Sin bordes ni fondo
+                placeholder = { Text("Título de la Nota") },
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(4.dp)) // Ajusta para reducir el espacio
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Contenido de la nota
             TextField(
                 value = newNoteContent,
                 onValueChange = { newNoteContent = it },
                 placeholder = { Text("Contenido de la Nota") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .border(BorderStroke(0.dp, Color.Transparent)) // Sin bordes ni fondo
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botones convertidos en íconos
+            // Botón para añadir imagen
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -192,31 +201,39 @@ fun HomeScreen(
                     Icon(Icons.Filled.Check, contentDescription = "Guardar Nota", tint = Color(0xFF607D8B))
                 }
 
-                IconButton(
-                    onClick = {
-                        val context = LocalContext as Activity
-                        viewModel.onImageClick(context)
-                    }
-                ) {
+                IconButton(onClick = onImageClick) {
                     Icon(Icons.Filled.AccountBox, contentDescription = "Añadir Imagen", tint = Color(0xFF607D8B))
                 }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Mostrar la imagen guardada
+            imagePath?.let { path ->
+                val bitmap = BitmapFactory.decodeFile(path)
+                Image(
+                    bitmap = bitmap.asImageBitmap(),
+                    contentDescription = "Imagen seleccionada o capturada",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(top = 16.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.weight(1f))
 
+            // Barra inferior
             MainBottomBar(
                 onHomeClick = onNavigateToHome,
                 onPinClick = { /* Implementar lógica de pin si es necesario */ },
-                onImageClick = {
-                    val context = LocalContext as Activity
-                    viewModel.onImageClick(context)
-                }
+                onImageClick = { onImageClick() }
             )
         }
     }
 }
+
+
 
 fun getCurrentTime(): String {
     val calendar = Calendar.getInstance()

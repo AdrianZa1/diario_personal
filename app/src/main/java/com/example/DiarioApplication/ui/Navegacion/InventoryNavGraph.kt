@@ -1,12 +1,14 @@
 package com.example.DiarioApplication.ui.navigation
 
+
+import CameraScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+
 import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
-import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
 import com.example.inventory.ui.inicio_sesion.LoginScreen
 import com.example.inventory.ui.inicio_sesion.RegisterScreen
 
@@ -22,7 +24,7 @@ fun InventoryNavHost(
     ) {
         composable("login") {
             LoginScreen(
-                onLoginSuccess = { navController.navigate("vivencias") },
+                onLoginSuccess = { navController.navigate("home") },
                 onNavigateToRegister = { navController.navigate("register") }
             )
         }
@@ -39,12 +41,12 @@ fun InventoryNavHost(
         composable("home") {
             HomeScreen(
                 onNavigateToHome = { navController.navigate("home") },
-                )
+                onImageClick = { navController.navigate("camera") } // Navegar a la cámara
+            )
         }
-        composable("vivencias") {
-            VivenciasScreen(
-                onAddClick = { /* Acción cuando se pulsa el FAB */ },
-                onNavigateToHome = { navController.navigate("home") }
+        composable("camera") { // Nueva ruta para la cámara
+            CameraScreen(
+                onImageCaptured = {  } // Vuelve a la pantalla anterior tras capturar imagen
             )
         }
     }
