@@ -26,14 +26,6 @@ class HomeViewModel(private val noteRepository: NoteRepository) : ViewModel() {
             noteRepository.insertNote(newNote)
         }
     }
-
-    // Función para eliminar una nota
-    fun deleteNote(note: Note) {
-        viewModelScope.launch {
-            noteRepository.deleteNoteById(note.id)
-        }
-    }
-
     // Alternar el estado de fijar de la nota
     fun onPinClick(note: Note) {
         viewModelScope.launch {
@@ -69,7 +61,6 @@ class HomeViewModel(private val noteRepository: NoteRepository) : ViewModel() {
             _notes.value = updatedNotes
         }
     }
-
 }
 
 

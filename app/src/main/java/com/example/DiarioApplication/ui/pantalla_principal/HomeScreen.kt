@@ -1,5 +1,6 @@
 package com.example.DiarioApplication.ui.pantalla_principal
 
+
 import CameraViewModel
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke

@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
+import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
 import com.example.inventory.ui.inicio_sesion.LoginScreen
 import com.example.inventory.ui.inicio_sesion.RegisterScreen
 
@@ -24,7 +25,7 @@ fun InventoryNavHost(
     ) {
         composable("login") {
             LoginScreen(
-                onLoginSuccess = { navController.navigate("home") },
+                onLoginSuccess = { navController.navigate("vivencias") },
                 onNavigateToRegister = { navController.navigate("register") }
             )
         }
@@ -38,16 +39,24 @@ fun InventoryNavHost(
                 onNavigateToLogin = { navController.navigate("login") }
             )
         }
-        composable("home") {
-            HomeScreen(
-                onNavigateToHome = { navController.navigate("home") },
-                onImageClick = { navController.navigate("camera") } // Navegar a la cámara
+        composable("camera") {
+            CameraScreen(
+                onCustomAction = { navController.navigate("home") } // Volver a la pantalla anterior tras capturar imagen
             )
         }
-        composable("camera") { // Nueva ruta para la cámara
-            CameraScreen(
-                onCustomAction = { navController.navigate("home") } // Vuelve a la pantalla anterior tras capturar imagen
+        composable("home"){
+            HomeScreen(
+                onImageClick = { navController.navigate("camera") },
+                onNavigateToHome = { navController.navigate("vivencias") }
+            )
+        }
+        composable("vivencias") { // Nueva ruta para la pantalla de vivencias
+            VivenciasScreen(
+                navController = navController,
+                onNavigateToAddVivencia = { navController.navigate("home") },
+                onNavigateToSearch = {  }
             )
         }
     }
 }
+
