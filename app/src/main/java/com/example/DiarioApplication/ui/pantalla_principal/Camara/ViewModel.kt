@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.Button
@@ -19,9 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun CameraScreen(cameraViewModel: CameraViewModel = viewModel(), onImageCaptured: () -> Unit) {
+fun CameraScreen(
+    cameraViewModel: CameraViewModel = viewModel(),
+    onCustomAction: () -> Unit)
+{
     val context = LocalContext.current
-
     // Lanzador para abrir la galería
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
@@ -57,15 +60,14 @@ fun CameraScreen(cameraViewModel: CameraViewModel = viewModel(), onImageCaptured
                 modifier = Modifier.fillMaxWidth()
             ) {
                 // Botón para cerrar la cámara
-                Icon(
-                    imageVector = Icons.Filled.Close,
-                    contentDescription = "Cerrar",
+                Button(
+                    onClick = { onCustomAction() },
                     modifier = Modifier
-                        .size(48.dp)
-                        .padding(8.dp)
-                        .clickable { (context as? Activity)?.finish() }
-                )
-
+                        .size(64.dp)
+                        .padding(16.dp)
+                ) {
+                    Icon(imageVector = Icons.Filled.Clear, contentDescription = "Cerrar")
+                }
                 // Botón para abrir la galería
                 Icon(
                     imageVector = Icons.Filled.Photo,

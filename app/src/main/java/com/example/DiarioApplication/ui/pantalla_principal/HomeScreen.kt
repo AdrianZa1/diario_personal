@@ -1,47 +1,27 @@
 package com.example.DiarioApplication.ui.pantalla_principal
 
-
 import CameraViewModel
-import android.app.Activity
-import android.provider.MediaStore
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.ImageSearch
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.outlined.PushPin
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,22 +30,13 @@ import com.example.inventory.ui.AppViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import android.graphics.BitmapFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopAppBar(
-    onAddToFavoritesClick: () -> Unit,
-    currentTime: String,
-    currentDate: String
-) {
+fun MainTopAppBar(currentTime: String, currentDate: String) {
     TopAppBar(
         title = { Text(text = "Diario", color = Color(0xFF607D8B), fontWeight = FontWeight.Bold) },
         actions = {
-            IconButton(onClick = onAddToFavoritesClick) {
-                Icon(Icons.Filled.Star, contentDescription = "Añadir a favoritos", tint = Color(0xFF607D8B))
-            }
-            Spacer(modifier = Modifier.width(8.dp))
             Text(text = currentDate, color = Color(0xFF607D8B))
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = currentTime, color = Color(0xFF607D8B))
@@ -80,7 +51,9 @@ fun MainTopAppBar(
 fun MainBottomBar(
     onHomeClick: () -> Unit,
     onPinClick: () -> Unit,
-    onImageClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    onImageClick: () -> Unit,
+    onSaveNoteClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -92,14 +65,19 @@ fun MainBottomBar(
             Icon(Icons.Filled.Home, contentDescription = "Home", tint = Color(0xFF607D8B))
         }
         IconButton(onClick = onPinClick) {
-            Icon(Icons.Filled.Favorite, contentDescription = "Pin", tint = Color(0xFF607D8B))
+            Icon(Icons.Filled.PushPin, contentDescription = "Ver Notas Fijadas", tint = Color(0xFF607D8B))
+        }
+        IconButton(onClick = onFavoriteClick) {
+            Icon(Icons.Filled.Favorite, contentDescription = "Ver Notas Favoritas", tint = Color(0xFF607D8B))
         }
         IconButton(onClick = onImageClick) {
-            Icon(Icons.Filled.Create, contentDescription = "A   ñadir Imagen", tint = Color(0xFF607D8B))
+            Icon(Icons.Filled.ImageSearch, contentDescription = "Añadir Imagen", tint = Color(0xFF607D8B))
+        }
+        IconButton(onClick = onSaveNoteClick) {
+            Icon(Icons.Filled.Check, contentDescription = "Guardar Nota", tint = Color(0xFF607D8B))
         }
     }
 }
-
 
 @Composable
 fun NoteItem(
@@ -118,42 +96,62 @@ fun NoteItem(
         Text(text = note.content)
         Row {
             IconButton(onClick = onPinClick) {
-                Icon(Icons.Filled.Favorite, contentDescription = "Pin Note")
+                Icon(
+                    imageVector = if (note.isPinned) Icons.Default.PushPin else Icons.Outlined.PushPin,
+                    contentDescription = if (note.isPinned) "Desfijar Nota" else "Fijar Nota",
+                    tint = if (note.isPinned) Color.Yellow else Color.Gray
+                )
             }
             IconButton(onClick = onAddToFavoritesClick) {
-                Icon(Icons.Filled.Star, contentDescription = "Add to Favorites")
+                Icon(
+                    imageVector = if (note.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (note.isFavorite) "Quitar de Favoritos" else "Añadir a Favoritos",
+                    tint = if (note.isFavorite) Color.Red else Color.Gray
+                )
             }
         }
     }
 }
-
-
 
 @Composable
 fun HomeScreen(
     onImageClick: () -> Unit,
     onNavigateToHome: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    cameraViewModel: CameraViewModel = viewModel()  // Para manejar la imagen
+    cameraViewModel: CameraViewModel = viewModel()
 ) {
     val currentTime = remember { getCurrentTime() }
     val currentDate = remember { getCurrentDate() }
+    val notes by viewModel.notes.collectAsState()
 
     var newNoteTitle by remember { mutableStateOf("") }
     var newNoteContent by remember { mutableStateOf("") }
 
-    // Observar la ruta de la imagen guardada
     val imagePath by cameraViewModel.imagePath.collectAsState()
 
     Scaffold(
         topBar = {
             MainTopAppBar(
-                onAddToFavoritesClick = { /* Implementar lógica para agregar a favoritos */ },
                 currentTime = currentTime,
                 currentDate = currentDate
             )
         },
-        containerColor = Color(0xFFE0F7FA)
+        containerColor = Color(0xFFE0F7FA),
+        bottomBar = {
+            MainBottomBar(
+                onHomeClick = onNavigateToHome,
+                onPinClick = { /* Implementar lógica para ver notas fijadas */ },
+                onFavoriteClick = { /* Implementar lógica para ver notas favoritas */ },
+                onImageClick = onImageClick,
+                onSaveNoteClick = {
+                    if (newNoteTitle.isNotEmpty() && newNoteContent.isNotEmpty()) {
+                        viewModel.addNote(newNoteTitle, newNoteContent)
+                        newNoteTitle = ""
+                        newNoteContent = ""
+                    }
+                }
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -162,52 +160,22 @@ fun HomeScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Título de la nota
+            // Campo para el título de la nota
             TextField(
                 value = newNoteTitle,
                 onValueChange = { newNoteTitle = it },
                 placeholder = { Text("Título de la Nota") },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(4.dp))
-
-            // Contenido de la nota
+            // Campo para el contenido de la nota
             TextField(
                 value = newNoteContent,
                 onValueChange = { newNoteContent = it },
                 placeholder = { Text("Contenido de la Nota") },
                 modifier = Modifier.fillMaxWidth()
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Botón para añadir imagen
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                IconButton(
-                    onClick = {
-                        if (newNoteTitle.isNotEmpty() && newNoteContent.isNotEmpty()) {
-                            viewModel.addNote(newNoteTitle, newNoteContent)
-                            newNoteTitle = ""
-                            newNoteContent = ""
-                        }
-                    }
-                ) {
-                    Icon(Icons.Filled.Check, contentDescription = "Guardar Nota", tint = Color(0xFF607D8B))
-                }
-
-                IconButton(onClick = onImageClick) {
-                    Icon(Icons.Filled.AccountBox, contentDescription = "Añadir Imagen", tint = Color(0xFF607D8B))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             // Mostrar la imagen guardada
             imagePath?.let { path ->
                 val bitmap = BitmapFactory.decodeFile(path)
@@ -220,20 +188,20 @@ fun HomeScreen(
                         .padding(top = 16.dp)
                 )
             }
-
             Spacer(modifier = Modifier.weight(1f))
-
-            // Barra inferior
-            MainBottomBar(
-                onHomeClick = onNavigateToHome,
-                onPinClick = { /* Implementar lógica de pin si es necesario */ },
-                onImageClick = { onImageClick() }
-            )
+            // Lista de notas
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(notes) { note ->
+                    NoteItem(
+                        note = note,
+                        onPinClick = { viewModel.onPinClick(note) },
+                        onAddToFavoritesClick = { viewModel.onAddToFavoritesClick(note) }
+                    )
+                }
+            }
         }
     }
 }
-
-
 
 fun getCurrentTime(): String {
     val calendar = Calendar.getInstance()
@@ -246,4 +214,3 @@ fun getCurrentDate(): String {
     val dateFormat = SimpleDateFormat("dd, MMM yyyy", Locale.getDefault())
     return dateFormat.format(calendar.time)
 }
-

@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class VivenciasViewModel(private val repository: NoteRepository) : ViewModel() {
+class VivenciasViewModel(private val noteRepository: NoteRepository) : ViewModel() {
 
     // Función para obtener las notas directamente del repositorio
-    fun obtenerVivencias(): List<Note> {
-        return repository.getAllNotes() // Asumiendo que tienes esta función en tu repositorio
+    fun obtenerVivencias(): Flow<List<Note>> {
+        return noteRepository.getAllNotes() // Asumiendo que tienes esta función en tu repositorio
     }
 
     // Función para agregar una nueva vivencia (opcional, si la necesitas)

@@ -12,7 +12,7 @@ class NoteRepository(private val noteDao: NoteDao) {
     }
 
     // Obtener todas las notas
-    fun getAllNotes(): List<Note> {
+    fun getAllNotes(): Flow<List<Note>> {
         return noteDao.getAllNotes()
     }
 
@@ -20,5 +20,16 @@ class NoteRepository(private val noteDao: NoteDao) {
     suspend fun deleteNoteById(noteId: Int) {
         noteDao.deleteNoteById(noteId)
     }
+
+    // Actualizar el estado de "Pin" de una nota
+    suspend fun updatePinState(noteId: Int, isPinned: Boolean) {
+        noteDao.updatePinState(noteId, isPinned)
+    }
+
+    // Actualizar el estado de "Favorito" de una nota
+    suspend fun updateFavoriteState(noteId: Int, isFavorite: Boolean) {
+        noteDao.updateFavoriteState(noteId, isFavorite)
+    }
 }
+
 

@@ -46,7 +46,7 @@ fun InventoryNavHost(
         }
         composable("camera") { // Nueva ruta para la cámara
             CameraScreen(
-                onImageCaptured = {  } // Vuelve a la pantalla anterior tras capturar imagen
+                onCustomAction = { navController.navigate("home") } // Vuelve a la pantalla anterior tras capturar imagen
             )
         }
     }
