@@ -54,7 +54,6 @@ fun InventoryNavHost(
             VivenciasScreen(
                 navController = navController,
                 onNavigateToAddVivencia = { navController.navigate("home") },
-                onNavigateToSearch = {  }
             )
         }
     }
