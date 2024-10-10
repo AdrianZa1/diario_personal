@@ -14,8 +14,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -105,33 +107,22 @@ fun VivenciasScreen(
 }
 
 @Composable
-fun VivenciaItem(vivencia: Note, onClick: () -> Unit) {
+fun VivenciaItem(note: Note, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick) // Mantenemos la indicación
-            .padding(16.dp)
-            .background(Color.White, shape = MaterialTheme.shapes.medium)
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .clickable(onClick = onClick)
+            .padding(8.dp)
     ) {
-        Icon(
-            imageVector = Icons.Default.Event,
-            contentDescription = "Ícono de fecha",
-            tint = Color.Gray
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(
-                text = vivencia.title,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = vivencia.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
+        // Título de la vivencia
+        Text(text = note.title, modifier = Modifier.weight(1f))
+
+        // Íconos para el estado
+        if (note.isFavorite) {
+            Icon(Icons.Default.Favorite, contentDescription = "Favorito", tint = Color.Red)
+        }
+        if (note.isPinned) {
+            Icon(Icons.Default.PushPin, contentDescription = "Pinneada", tint = Color.Blue)
         }
     }
 }
