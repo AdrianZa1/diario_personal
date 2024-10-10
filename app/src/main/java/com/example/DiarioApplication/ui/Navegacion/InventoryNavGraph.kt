@@ -2,6 +2,7 @@ package com.example.DiarioApplication.ui.navigation
 
 
 import CameraScreen
+import NoteScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -39,7 +40,7 @@ fun InventoryNavHost(
                 onNavigateToLogin = { navController.navigate("login") }
             )
         }
-        composable("camera") {
+        composable("cameraa") {
             CameraScreen(
                 onCustomAction = { navController.navigate("home") } // Volver a la pantalla anterior tras capturar imagen
             )
@@ -55,6 +56,11 @@ fun InventoryNavHost(
                 navController = navController,
                 onNavigateToAddVivencia = { navController.navigate("home") },
             )
+        }
+        composable("camera") { // Nueva ruta para la cámara
+            NoteScreen(
+                onHomeClick = {  } // Vuelve a la pantalla anterior tras capturar imagen
+           )
         }
     }
 }
