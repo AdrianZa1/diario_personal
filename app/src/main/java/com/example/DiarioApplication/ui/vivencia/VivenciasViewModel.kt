@@ -22,6 +22,22 @@ class VivenciasViewModel(private val noteRepository: NoteRepository) : ViewModel
         return noteRepository.getAllNotes() // Asumiendo que tienes esta función en tu repositorio
     }
 
+    fun onPinClick(note: Note) {
+        // Cambiar el estado de la nota a fijada o no fijada
+        val updatedNote = note.copy(isPinned = !note.isPinned)
+        viewModelScope.launch {
+            noteRepository.updateNote(updatedNote)
+        }
+    }
+
+    fun onAddToFavoritesClick(note: Note) {
+        // Cambiar el estado de la nota a favorita o no favorita
+        val updatedNote = note.copy(isFavorite = !note.isFavorite)
+        viewModelScope.launch {
+            noteRepository.updateNote(updatedNote)
+        }
+    }
+
 }
 
 

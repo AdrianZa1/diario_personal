@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class HomeViewModel(private val noteRepository: NoteRepository) : ViewModel() {
 
-    private val _notes = MutableStateFlow<List<Note>>(emptyList())
-    val notes: StateFlow<List<Note>> = _notes
+    val notes: StateFlow<List<Note>> = noteRepository.getAllNotes().stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     // Función para agregar una nueva nota
     fun addNote(title: String, content: String) {
@@ -24,41 +23,6 @@ class HomeViewModel(private val noteRepository: NoteRepository) : ViewModel() {
                 timestamp = System.currentTimeMillis()
             )
             noteRepository.insertNote(newNote)
-        }
-    }
-    // Alternar el estado de fijar de la nota
-    fun onPinClick(note: Note) {
-        viewModelScope.launch {
-            // Actualiza el estado de la nota fijada en la base de datos
-            noteRepository.updatePinState(note.id, !note.isPinned)
-
-            // Actualiza el estado en la lista local para reflejar el cambio
-            val updatedNotes = _notes.value.map {
-                if (it.id == note.id) {
-                    it.copy(isPinned = !it.isPinned)
-                } else {
-                    it
-                }
-            }
-            _notes.value = updatedNotes
-        }
-    }
-
-    // Alternar el estado de favorito de la nota
-    fun onAddToFavoritesClick(note: Note) {
-        viewModelScope.launch {
-            // Actualiza el estado de la nota favorita en la base de datos
-            noteRepository.updateFavoriteState(note.id, !note.isFavorite)
-
-            // Actualiza el estado en la lista local para reflejar el cambio
-            val updatedNotes = _notes.value.map {
-                if (it.id == note.id) {
-                    it.copy(isFavorite = !it.isFavorite)
-                } else {
-                    it
-                }
-            }
-            _notes.value = updatedNotes
         }
     }
 }

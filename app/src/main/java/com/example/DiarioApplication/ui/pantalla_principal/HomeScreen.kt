@@ -83,8 +83,6 @@ fun MainBottomBar(
 @Composable
 fun NoteItem(
     note: Note,
-    onPinClick: () -> Unit,
-    onAddToFavoritesClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -95,22 +93,6 @@ fun NoteItem(
     ) {
         Text(text = note.title, fontWeight = FontWeight.Bold)
         Text(text = note.content)
-        Row {
-            IconButton(onClick = onPinClick) {
-                Icon(
-                    imageVector = if (note.isPinned) Icons.Default.PushPin else Icons.Outlined.PushPin,
-                    contentDescription = if (note.isPinned) "Desfijar Nota" else "Fijar Nota",
-                    tint = if (note.isPinned) Color.Yellow else Color.Gray
-                )
-            }
-            IconButton(onClick = onAddToFavoritesClick) {
-                Icon(
-                    imageVector = if (note.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = if (note.isFavorite) "Quitar de Favoritos" else "Añadir a Favoritos",
-                    tint = if (note.isFavorite) Color.Red else Color.Gray
-                )
-            }
-        }
     }
 }
 
@@ -191,15 +173,6 @@ fun HomeScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             // Lista de notas
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(notes) { note ->
-                    NoteItem(
-                        note = note,
-                        onPinClick = { viewModel.onPinClick(note) },
-                        onAddToFavoritesClick = { viewModel.onAddToFavoritesClick(note) }
-                    )
-                }
-            }
         }
     }
 }

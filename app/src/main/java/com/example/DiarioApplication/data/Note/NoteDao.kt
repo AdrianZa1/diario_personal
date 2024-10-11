@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,6 +16,9 @@ interface NoteDao {
     // Obtener todas las notas
     @Query("SELECT * FROM notes")
     fun getAllNotes(): Flow<List<Note>>
+
+    @Update
+    suspend fun update(note: Note)
 
     // Eliminar una nota por ID
     @Query("DELETE FROM notes WHERE id = :noteId")

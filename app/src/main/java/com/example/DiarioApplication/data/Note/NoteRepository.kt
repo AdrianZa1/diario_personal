@@ -20,7 +20,9 @@ class NoteRepository(private val noteDao: NoteDao) {
     suspend fun deleteNoteById(noteId: Int) {
         noteDao.deleteNoteById(noteId)
     }
-
+    suspend fun updateNote(note: Note) {
+        noteDao.update(note) // Asegúrate de tener este método en tu DAO
+    }
     // Actualizar el estado de "Pin" de una nota
     suspend fun updatePinState(noteId: Int, isPinned: Boolean) {
         noteDao.updatePinState(noteId, isPinned)

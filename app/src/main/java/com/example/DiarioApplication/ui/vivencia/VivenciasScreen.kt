@@ -1,12 +1,15 @@
 package com.example.DiarioApplication.ui.vivencia
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.PushPin
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.DiarioApplication.data.Note.Note
+import com.example.DiarioApplication.ui.pantalla_principal.NoteItem
 import com.example.inventory.ui.AppViewModelProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,11 +33,9 @@ fun VivenciasScreen(
 ) {
     val vivencias by vivenciasViewModel.obtenerVivencias().collectAsState(initial = emptyList())
 
-    // Estado para controlar si se está mostrando el campo de búsqueda
     var isSearching by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
 
-    // Filtrar vivencias basado en el texto de búsqueda
     val filteredVivencias = if (searchText.isEmpty()) {
         vivencias
     } else {
@@ -51,14 +53,13 @@ fun VivenciasScreen(
                             placeholder = { Text("Buscar vivencias...") },
                             modifier = Modifier.fillMaxWidth(),
                             colors = TextFieldDefaults.textFieldColors(
-                                focusedTextColor = Color.Black,  // Cambiado a focusedTextColor
-                                unfocusedTextColor = Color.Black, // Puedes ajustar el color del texto desenfocado si lo deseas
+                                focusedTextColor = Color.Black,
+                                unfocusedTextColor = Color.Black,
                                 cursorColor = Color.Black,
                                 focusedIndicatorColor = Color.Black,
                                 unfocusedIndicatorColor = Color.Black
                             )
                         )
-
                     } else {
                         Text(
                             text = "Vivencias",
@@ -69,7 +70,7 @@ fun VivenciasScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Implement menu action */ }) {
+                    IconButton(onClick = { /* Implementar acción del menú */ }) {
                         Icon(
                             Icons.Default.Menu,
                             contentDescription = "Menu",
@@ -80,10 +81,9 @@ fun VivenciasScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            // Alternar entre modo de búsqueda y modo normal
                             isSearching = !isSearching
                             if (!isSearching) {
-                                searchText = "" // Resetear el texto de búsqueda cuando se cierra el modo de búsqueda
+                                searchText = ""
                             }
                         }
                     ) {
@@ -99,60 +99,52 @@ fun VivenciasScreen(
                 )
             )
         },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onNavigateToAddVivencia,
+                containerColor = Color.Red
+            ) {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = "Añadir nueva vivencia",
+                    tint = Color.White
+                )
+            }
+        },
         content = { padding ->
-            Box(
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
-                Column(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    if (filteredVivencias.isEmpty()) {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            Text(
-                                text = if (searchText.isEmpty()) "No hay vivencias aún." else "No se encontraron vivencias.",
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                        }
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f),
-                            contentPadding = PaddingValues(16.dp)
-                        ) {
-                            items(filteredVivencias) { vivencia ->
-                                VivenciaItem(vivencia) {
+                if (filteredVivencias.isEmpty()) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(
+                            text = if (searchText.isEmpty()) "No hay vivencias aún." else "No se encontraron vivencias.",
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp)
+                    ) {
+                        items(filteredVivencias) { vivencia ->
+                            VivenciaItem(
+                                vivencia = vivencia,
+                                onClick = {
                                     navController.currentBackStackEntry?.savedStateHandle?.set("vivenciaId", vivencia.id)
                                     navController.navigate("vivenciaDetail")
-                                }
-                            }
+                                },
+                                onPinClick = { vivenciasViewModel.onPinClick(vivencia) },
+                                onAddToFavoritesClick = { vivenciasViewModel.onAddToFavoritesClick(vivencia) }
+                            )
                         }
-                    }
-                }
-
-                // Botón flotante centrado en la parte inferior
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    FloatingActionButton(
-                        onClick = onNavigateToAddVivencia,
-                        containerColor = Color.Red,
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Añadir nueva vivencia",
-                            tint = Color.White
-                        )
                     }
                 }
             }
@@ -161,33 +153,40 @@ fun VivenciasScreen(
 }
 
 @Composable
-fun VivenciaItem(vivencia: Note, onClick: () -> Unit) {
-    Row(
+fun VivenciaItem(
+    vivencia: Note,
+    onClick: () -> Unit,
+    onPinClick: () -> Unit,
+    onAddToFavoritesClick: () -> Unit
+) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 8.dp)
             .clickable(onClick = onClick)
-            .padding(16.dp)
-            .background(Color.White, shape = MaterialTheme.shapes.medium)
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(8.dp)
+            .background(Color.White, shape = MaterialTheme.shapes.medium),
+        horizontalAlignment = Alignment.Start
     ) {
-        Icon(
-            imageVector = Icons.Default.Event,
-            contentDescription = "Ícono de fecha",
-            tint = Color.Gray
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Column {
-            Text(
-                text = vivencia.title,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = vivencia.content,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray
-            )
+        Text(text = vivencia.title, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(text = vivencia.content)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row {
+            IconButton(onClick = onPinClick) {
+                Icon(
+                    imageVector = if (vivencia.isPinned) Icons.Default.PushPin else Icons.Outlined.PushPin,
+                    contentDescription = if (vivencia.isPinned) "Desfijar Nota" else "Fijar Nota",
+                    tint = if (vivencia.isPinned) Color.Yellow else Color.Gray
+                )
+            }
+            IconButton(onClick = onAddToFavoritesClick) {
+                Icon(
+                    imageVector = if (vivencia.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                    contentDescription = if (vivencia.isFavorite) "Quitar de Favoritos" else "Añadir a Favoritos",
+                    tint = if (vivencia.isFavorite) Color.Red else Color.Gray
+                )
+            }
         }
     }
 }
