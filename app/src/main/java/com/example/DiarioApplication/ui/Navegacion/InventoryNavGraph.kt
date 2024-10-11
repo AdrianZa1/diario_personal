@@ -1,9 +1,9 @@
 package com.example.DiarioApplication.ui.navigation
 
-
 import CameraScreen
 import LoginScreen
 import NoteScreen
+import UserProfileScreen // Importamos la pantalla del perfil de usuario
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -47,7 +47,7 @@ fun InventoryNavHost(
                 onCustomAction = { navController.navigate("home") } // Volver a la pantalla anterior tras capturar imagen
             )
         }
-        composable("home"){
+        composable("home") {
             HomeScreen(
                 onImageClick = { navController.navigate("camera") },
                 onNavigateToHome = { navController.navigate("vivencias") }
@@ -59,10 +59,10 @@ fun InventoryNavHost(
                 onNavigateToAddVivencia = { navController.navigate("home") },
             )
         }
-        composable("vivenciaDetalle") { // Nueva ruta para la cámara
+        composable("vivenciaDetalle") {
             NoteScreen(
                 onHomeClick = { navController.navigate("vivencias") } // Vuelve a la pantalla anterior tras capturar imagen
-           )
+            )
         }
         // Pantalla del menú desplegable
         composable("menuScreen") {
@@ -84,6 +84,11 @@ fun InventoryNavHost(
                 onNavigateToRegister = { navController.navigate("register") }
             )
         }
+
+        // Ruta para el perfil de usuario
+        composable("userProfile/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0
+            UserProfileScreen(userId = userId)
+        }
     }
 }
-

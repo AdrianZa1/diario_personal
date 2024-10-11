@@ -23,7 +23,7 @@ interface UserDao {
     fun getAllUserStream(): Flow<List<User>>
 
     @Query("SELECT * from users WHERE id = :id")
-    fun getUserStream(id: Int): Flow<User>
+    fun getUserStream(id: Int): User
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User)
@@ -33,4 +33,6 @@ interface UserDao {
 
     @Delete
     suspend fun deleteUser(user: User)
+
+
 }

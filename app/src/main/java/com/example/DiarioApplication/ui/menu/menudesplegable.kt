@@ -89,7 +89,7 @@ fun MenuDesplegableScreen(
         MenuItem(
             icon = Icons.Filled.AccountCircle,
             title = "Perfil",
-            onClick = { navController.navigate("perfil") }, // Placeholder si tienes una pantalla de perfil
+            onClick = { navController.navigate("userProfile/{userId}") }, // Placeholder si tienes una pantalla de perfil
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )

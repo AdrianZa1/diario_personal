@@ -16,7 +16,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     // Obtener un usuario por ID
-    fun getUserById(userId: Int): Flow<User?> {
+    fun getUserById(userId: Int): User {
         return userDao.getUserStream(userId)
     }
 
@@ -32,6 +32,8 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun getUserByCredentials(email: String, password: String): User? {
         return userDao.getUserByCredentials(email, password)
     }
+
+
 
     // Eliminar un usuario por ID (opcional si lo necesitas)
     suspend fun deleteUserById(userId: Int) {

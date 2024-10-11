@@ -1,6 +1,7 @@
 package com.example.inventory.ui
 
 import LoginViewModel
+import UserProfileViewModel
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 
@@ -26,6 +27,10 @@ object AppViewModelProvider {
         initializer {
             val appContainer = inventoryApplication().container
             LoginViewModel(appContainer.userRepository)
+        }
+        initializer {
+            val appContainer = inventoryApplication().container
+            UserProfileViewModel(appContainer.userRepository)
         }
 
         // Initializer for HomeViewModel
