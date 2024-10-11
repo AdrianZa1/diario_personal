@@ -4,7 +4,6 @@ import LoginViewModel
 import UserProfileViewModel
 import android.app.Application
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
-
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -13,56 +12,59 @@ import com.example.DiarioApplication.ui.NoteViewModel
 import com.example.DiarioApplication.ui.pantalla_principal.HomeViewModel
 import com.example.DiarioApplication.ui.vivencia.VivenciasViewModel
 import com.example.inventory.ui.item.UserEntryViewModel
+import com.example.menu.MenuViewModel
 
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
-
-        // Initializer for UserEntryViewModel
+        // Inicializador para UserEntryViewModel
         initializer {
             val appContainer = inventoryApplication().container
             UserEntryViewModel(appContainer.userRepository)
         }
 
+        // Inicializador para LoginViewModel
         initializer {
             val appContainer = inventoryApplication().container
             LoginViewModel(appContainer.userRepository)
         }
+
+        // Inicializador para UserProfileViewModel
         initializer {
             val appContainer = inventoryApplication().container
             UserProfileViewModel(appContainer.userRepository)
         }
 
-        // Initializer for HomeViewModel
+        // Inicializador para HomeViewModel
         initializer {
             val appContainer = inventoryApplication().container
             HomeViewModel(appContainer.noteRepository)
         }
 
-        //Initializer for VivenciasViewModel
-         initializer{
+        // Inicializador para VivenciasViewModel
+        initializer {
             val appContainer = inventoryApplication().container
-            VivenciasViewModel(appContainer.noteRepository, appContainer.etiquetaRepository) // Pasamos ambos repositorios
+            VivenciasViewModel(appContainer.noteRepository, appContainer.etiquetaRepository)
         }
 
-        //Initializer for NoteViewModel
+        // Inicializador para NoteViewModel
         initializer {
             val appContainer = inventoryApplication().container
             NoteViewModel(inventoryApplication(), appContainer.noteRepository)
         }
 
-        //Initializer for NoteViewModel
+        // Inicializador para MenuViewModel
         initializer {
             val appContainer = inventoryApplication().container
-            NoteViewModel(inventoryApplication(), appContainer.noteRepository)
+            MenuViewModel(appContainer.userRepository) // Usa el repository directamente
         }
     }
 }
 
-
 /**
- * Extension function to queries for [Application] object and returns an instance of
- * [InventoryApplication].
+ * Función de extensión para consultar el objeto [Application] y devolver una instancia de
+ * [DiarioApplication].
  */
 fun CreationExtras.inventoryApplication(): DiarioApplication =
     (this[AndroidViewModelFactory.APPLICATION_KEY] as DiarioApplication)
+

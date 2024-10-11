@@ -16,6 +16,7 @@ import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
 import com.example.inventory.ui.inicio_sesion.RegisterScreen
 import com.example.menu.MenuDesplegableScreen
 
+
 @Composable
 fun InventoryNavHost(
     navController: NavHostController,
@@ -64,9 +65,9 @@ fun InventoryNavHost(
                 onHomeClick = { navController.navigate("vivencias") } // Vuelve a la pantalla anterior tras capturar imagen
             )
         }
-        // Pantalla del menú desplegable
-        composable("menuScreen") {
-            MenuDesplegableScreen(navController = navController)
+        composable("menuScreen/{userId}") { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0
+            MenuDesplegableScreen(navController = navController, userId = userId) // Pasar el userId aquí
         }
 
         // Ruta para "Nueva Vivencia" que te lleva a la pantalla de Home
@@ -77,18 +78,13 @@ fun InventoryNavHost(
             )
         }
 
-        // Ruta para "Cerrar Sesión" que te redirige a la pantalla de Login
-        composable("login") {
-            LoginScreen(
-                onLoginSuccess = { navController.navigate("vivencias") },
-                onNavigateToRegister = { navController.navigate("register") }
-            )
-        }
-
         // Ruta para el perfil de usuario
         composable("userProfile/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0
-            UserProfileScreen(userId = userId)
+            UserProfileScreen(
+                userId = userId,
+                onBackClick = { navController.popBackStack() } // Aquí se pasa el onBackClick
+            )
         }
     }
 }

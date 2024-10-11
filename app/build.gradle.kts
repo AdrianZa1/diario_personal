@@ -72,6 +72,7 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.3.4")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.3")
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
 

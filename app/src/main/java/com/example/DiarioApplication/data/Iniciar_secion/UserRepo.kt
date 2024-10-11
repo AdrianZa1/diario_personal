@@ -16,7 +16,7 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     // Obtener un usuario por ID
-    fun getUserById(userId: Int): User {
+    fun getUserById(userId: Int): Flow<User> {
         return userDao.getUserStream(userId)
     }
 

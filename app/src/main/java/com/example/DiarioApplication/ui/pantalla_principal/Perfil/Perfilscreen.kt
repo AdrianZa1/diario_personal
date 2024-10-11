@@ -11,7 +11,8 @@ import com.example.inventory.ui.AppViewModelProvider
 @Composable
 fun UserProfileScreen(
     userId: Int, // El ID del usuario que inició sesión
-    viewModel: UserProfileViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: UserProfileViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    onBackClick: () -> Unit // Callback para manejar el evento de volver atrás
 ) {
     // Estados para el correo y la contraseña
     var email by remember { mutableStateOf("") }
@@ -87,7 +88,6 @@ fun UserProfileScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-
         Button(
             onClick = {
                 if (password == confirmPassword) {
@@ -104,5 +104,16 @@ fun UserProfileScreen(
         ) {
             Text("Actualizar")
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Botón para volver a la pantalla anterior
+        Button(
+            onClick = { onBackClick() },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Volver")
+        }
     }
 }
+

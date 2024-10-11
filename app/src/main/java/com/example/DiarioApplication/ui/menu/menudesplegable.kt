@@ -1,5 +1,6 @@
 package com.example.menu
 
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +10,9 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,11 +23,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventory.ui.AppViewModelProvider
+import com.example.inventory.ui.item.UserEntryViewModel
 
 @Composable
 fun MenuDesplegableScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    userId: Int, // Asegúrate de recibir el userId
+    viewModel: MenuViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    // Cargar el usuario actual
+    LaunchedEffect(userId) {
+        viewModel.loadCurrentUser(userId)
+    }
+
+    val currentUser by viewModel.currentUser.observeAsState() // Observa el usuario actual
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -46,15 +62,16 @@ fun MenuDesplegableScreen(
 
             Spacer(modifier = Modifier.width(16.dp))
 
+            // Mostrar el nombre de usuario y correo electrónico
             Column {
                 Text(
-                    text = "Nombre Apellido",
+                    text = currentUser?.username ?: "Nombre Apellido", // Muestra el username o un placeholder
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = Color(0xFF0277BD)
                 )
                 Text(
-                    text = "yourname@gmail.com",
+                    text = currentUser?.email ?: "yourname@gmail.com", // Muestra el email o un placeholder
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
@@ -78,18 +95,18 @@ fun MenuDesplegableScreen(
         MenuItem(
             icon = Icons.Filled.Add,
             title = "Nueva Vivencia",
-            onClick = { navController.navigate("nuevaVivencia") }, // Navegación a "Home"
+            onClick = { navController.navigate("nuevaVivencia") }, // Navegación a "Nueva Vivencia"
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón "Perfil" (puedes agregar la lógica si tienes un perfil)
+        // Botón "Perfil"
         MenuItem(
             icon = Icons.Filled.AccountCircle,
             title = "Perfil",
-            onClick = { navController.navigate("userProfile/{userId}") }, // Placeholder si tienes una pantalla de perfil
+            onClick = { navController.navigate("userProfile/{userId}") }, // Navegación a la pantalla de perfil
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )
@@ -106,6 +123,8 @@ fun MenuDesplegableScreen(
         )
     }
 }
+
+
 
 @Composable
 fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit, iconTint: Color, textColor: Color) {
@@ -133,3 +152,4 @@ fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit, iconTint: Co
         )
     }
 }
+
