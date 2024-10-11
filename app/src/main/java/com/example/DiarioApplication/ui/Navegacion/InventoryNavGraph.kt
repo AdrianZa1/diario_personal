@@ -2,6 +2,7 @@ package com.example.DiarioApplication.ui.navigation
 
 
 import CameraScreen
+import LoginScreen
 import NoteScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,7 +12,7 @@ import androidx.navigation.compose.composable
 
 import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
 import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
-import com.example.inventory.ui.inicio_sesion.LoginScreen
+
 import com.example.inventory.ui.inicio_sesion.RegisterScreen
 import com.example.menu.MenuDesplegableScreen
 

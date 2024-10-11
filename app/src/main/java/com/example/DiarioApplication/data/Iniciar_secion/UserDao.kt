@@ -16,20 +16,21 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
 
+    @Query("SELECT * FROM users WHERE email = :email AND password = :password LIMIT 1")
+    suspend fun getUserByCredentials(email: String, password: String): User?
+
     @Query("SELECT * from users ORDER BY username ASC")
-    fun getAllItems(): Flow<List<User>>
+    fun getAllUserStream(): Flow<List<User>>
 
     @Query("SELECT * from users WHERE id = :id")
-    fun getItem(id: Int): Flow<User>
+    fun getUserStream(id: Int): Flow<User>
 
-    // Specify the conflict strategy as IGNORE, when the user tries to add an
-    // existing Item into the database Room ignores the conflict.
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(user: User)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: User)
 
     @Update
-    suspend fun update(user: User)
+    suspend fun updateUser(user: User)
 
     @Delete
-    suspend fun delete(user: User)
+    suspend fun deleteUser(user: User)
 }

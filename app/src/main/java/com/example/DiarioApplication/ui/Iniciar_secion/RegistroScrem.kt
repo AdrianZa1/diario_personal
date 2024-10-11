@@ -95,40 +95,20 @@ fun RegisterScreen(
         Button(
             onClick = {
                 coroutineScope.launch {
+                    val newUser = User(username = name, email = email, password = password)
+                    viewModel.saveUser(newUser)  // Simplemente guardar el usuario
 
-                    if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-                        errorMessage = "Por favor, complete todos los campos"
-                        return@launch
-                    }
-
-                    if (password != confirmPassword) {
-                        errorMessage = "Las contraseñas no coinciden"
-                        return@launch
-                    }
-
-                    try {
-                        val newUser = User(username = name, email = email, password = password)
-                        viewModel.saveUser(newUser)
-
-                        // Si la inserción es exitosa
-                        errorMessage = null
-                        onRegisterClick()
-                    } catch (e: Exception) {
-                        // Capturar y mostrar el error en caso de que ocurra algún problema
-                        errorMessage = "Error al registrar el usuario: ${e.message}"
-                        e.printStackTrace() // Registrar la excepción en el logcat
-                    }
+                    // Navegar tras el registro exitoso
+                    onRegisterClick()
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Registrarse")
         }
-        
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Botón de navegación a la pantalla de inicio de sesión
         TextButton(onClick = onNavigateToLogin) {
             Text("¿Ya tienes cuenta? Inicia sesión")
         }

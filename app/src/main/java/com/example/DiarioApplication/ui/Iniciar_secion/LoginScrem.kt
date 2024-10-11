@@ -1,5 +1,3 @@
-package com.example.inventory.ui.inicio_sesion
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -8,15 +6,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.inventory.ui.AppViewModelProvider
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     onNavigateToRegister: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    viewModel: LoginViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
+
+    // Obtenemos el estado del mensaje de error del ViewModel
+    val loginError by viewModel.loginError.collectAsState()
 
     Column(
         modifier = Modifier
@@ -51,14 +55,14 @@ fun LoginScreen(
             onValueChange = { password = it },
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
-            visualTransformation = PasswordVisualTransformation() // Para ocultar la contraseña
+            visualTransformation = PasswordVisualTransformation()  // Ocultar contraseña
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Mensaje de error si las credenciales son incorrectas
-        if (errorMessage.isNotEmpty()) {
+        // Mostrar mensaje de error si las credenciales son incorrectas
+        if (loginError != null) {
             Text(
-                text = errorMessage,
+                text = loginError ?: "",
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -68,14 +72,7 @@ fun LoginScreen(
         // Botón para iniciar sesión
         Button(
             onClick = {
-                // Validación simple de credenciales
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    // Aquí puedes agregar la lógica de autenticación
-                    // Si el inicio de sesión es exitoso:
-                    onLoginSuccess()
-                } else {
-                    errorMessage = "Por favor, ingrese un correo y contraseña válidos."
-                }
+                viewModel.login(email, password, onLoginSuccess)
             },
             modifier = Modifier.fillMaxWidth()
         ) {

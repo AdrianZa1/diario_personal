@@ -21,23 +21,33 @@ interface AppContainer {
  * [UserContainer] implementation that provides instance of [OfflineItemsRepository]
  */
 class DefaultAppContainer(context: Context) : AppContainer {
+    // Inicialización de la base de datos
     private val database = AppDatabase.getDatabase(context)
 
+    // Implementación de userRepository
     override val userRepository: UserRepository by lazy {
-        OfflineUserRepository(database.userDao())
+        UserRepository(database.userDao()) // Suponiendo que AppDatabase tiene un método userDao()
     }
 
+    // Implementación de noteRepository
     override val noteRepository: NoteRepository by lazy {
         NoteRepository(database.noteDao())
     }
 
+    // Implementación de etiquetaRepository
     override val etiquetaRepository: EtiquetaRepository by lazy {
-        EtiquetaRepository(database.etiquetaDao()) // Agregado
+        EtiquetaRepository(database.etiquetaDao())
     }
 
+    // Implementación adicional si lo necesitas
     val offlineEtiquetaRepository: OfflineEtiquetaRepository by lazy {
-        OfflineEtiquetaRepository(etiquetaRepository) // Agregado
+        OfflineEtiquetaRepository(etiquetaRepository)
     }
 }
+
+
+
+
+
 
 

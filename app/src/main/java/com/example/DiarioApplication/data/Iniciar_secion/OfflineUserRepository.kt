@@ -4,14 +4,14 @@ package com.example.inventory.data
 import com.tuapp.model.User
 import kotlinx.coroutines.flow.Flow
 
-class OfflineUserRepository(private val itemDao: UserDao) : UserRepository {
-    override fun getAllUserStream(): Flow<List<User>> = itemDao.getAllItems()
+class OfflineUserRepository(private val itemDao: UserDao)  {
+    fun getAllUserStream(): Flow<List<User>> = itemDao.getAllUserStream()
 
-    override fun getUsertream(id: Int): Flow<User?> = itemDao.getItem(id)
+     fun getUsertream(id: Int): Flow<User?> = itemDao.getUserStream(id)
 
-    override suspend fun insertUser( item:User) = itemDao.insert(item)
+     suspend fun insertUser( item:User) = itemDao.insertUser(item)
 
-    override suspend fun deleteUser(item: User) = itemDao.delete(item)
+    suspend fun deleteUser(item: User) = itemDao.deleteUser(item)
 
-    override suspend fun updateUser(item: User) = itemDao.update(item)
+    suspend fun updateUser(item: User) = itemDao.updateUser(item)
 }

@@ -1,35 +1,41 @@
-
 package com.example.inventory.data
 
 import com.tuapp.model.User
 import kotlinx.coroutines.flow.Flow
 
-/**
- * Repository that provides insert, update, delete, and retrieve of [Item] from a given data source.
- */
-interface UserRepository {
-    /**
-     * Retrieve all the items from the the given data source.
-     */
-    fun getAllUserStream(): Flow<List<User>>
+class UserRepository(private val userDao: UserDao) {
 
-    /**
-     * Retrieve an item from the given data source that matches with the [id].
-     */
-    fun getUsertream(id: Int): Flow<User?>
+    // Insertar un usuario
+    suspend fun insertUser(user: User) {
+        userDao.insertUser(user)
+    }
 
-    /**
-     * Insert item in the data source
-     */
-    suspend fun insertUser(item: User)
+    // Obtener todos los usuarios
+    fun getAllUsers(): Flow<List<User>> {
+        return userDao.getAllUserStream()
+    }
 
-    /**
-     * Delete item from the data source
-     */
-    suspend fun deleteUser(item: User)
+    // Obtener un usuario por ID
+    fun getUserById(userId: Int): Flow<User?> {
+        return userDao.getUserStream(userId)
+    }
 
-    /**
-     * Update item in the data source
-     */
-    suspend fun updateUser(item: User)
+    // Eliminar un usuario por objeto
+    suspend fun deleteUser(user: User) {
+        userDao.deleteUser(user)
+    }
+
+    // Actualizar un usuario
+    suspend fun updateUser(user: User) {
+        userDao.updateUser(user)
+    }
+    suspend fun getUserByCredentials(email: String, password: String): User? {
+        return userDao.getUserByCredentials(email, password)
+    }
+
+    // Eliminar un usuario por ID (opcional si lo necesitas)
+    suspend fun deleteUserById(userId: Int) {
+        // Aquí puedes llamar a un método que acepte ID en tu UserDao si existe
+        // userDao.deleteUserById(userId)
+    }
 }

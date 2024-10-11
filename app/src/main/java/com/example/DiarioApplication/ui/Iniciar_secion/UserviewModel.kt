@@ -20,9 +20,7 @@ class UserEntryViewModel(private val userRepository: UserRepository) : ViewModel
 
 
     suspend fun saveUser(newUser: User) {
-        if (validateInput()) {
-            userRepository.insertUser(userUiState.userDetails.toUser())
-        }
+        userRepository.insertUser(newUser)  // Insertar directamente
     }
 
     // Valida la entrada del usuario
