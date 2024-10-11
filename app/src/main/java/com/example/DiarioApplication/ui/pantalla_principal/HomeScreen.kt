@@ -3,22 +3,34 @@ package com.example.DiarioApplication.ui.pantalla_principal
 
 import CameraViewModel
 import android.graphics.BitmapFactory
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ImageSearch
-import androidx.compose.material.icons.filled.PushPin
-import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +38,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.DiarioApplication.data.Note.Note
 import com.example.inventory.ui.AppViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -51,8 +62,6 @@ fun MainTopAppBar(currentTime: String, currentDate: String) {
 @Composable
 fun MainBottomBar(
     onHomeClick: () -> Unit,
-    onPinClick: () -> Unit,
-    onFavoriteClick: () -> Unit,
     onImageClick: () -> Unit,
     onSaveNoteClick: () -> Unit
 ) {
@@ -65,34 +74,12 @@ fun MainBottomBar(
         IconButton(onClick = onHomeClick) {
             Icon(Icons.Filled.Home, contentDescription = "Home", tint = Color(0xFF607D8B))
         }
-        IconButton(onClick = onPinClick) {
-            Icon(Icons.Filled.PushPin, contentDescription = "Ver Notas Fijadas", tint = Color(0xFF607D8B))
-        }
-        IconButton(onClick = onFavoriteClick) {
-            Icon(Icons.Filled.Favorite, contentDescription = "Ver Notas Favoritas", tint = Color(0xFF607D8B))
-        }
         IconButton(onClick = onImageClick) {
             Icon(Icons.Filled.ImageSearch, contentDescription = "Añadir Imagen", tint = Color(0xFF607D8B))
         }
         IconButton(onClick = onSaveNoteClick) {
             Icon(Icons.Filled.Check, contentDescription = "Guardar Nota", tint = Color(0xFF607D8B))
         }
-    }
-}
-
-@Composable
-fun NoteItem(
-    note: Note,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .border(BorderStroke(1.dp, Color.Gray)),
-        horizontalAlignment = Alignment.Start
-    ) {
-        Text(text = note.title, fontWeight = FontWeight.Bold)
-        Text(text = note.content)
     }
 }
 
@@ -105,7 +92,6 @@ fun HomeScreen(
 ) {
     val currentTime = remember { getCurrentTime() }
     val currentDate = remember { getCurrentDate() }
-    val notes by viewModel.notes.collectAsState()
 
     var newNoteTitle by remember { mutableStateOf("") }
     var newNoteContent by remember { mutableStateOf("") }
@@ -123,8 +109,6 @@ fun HomeScreen(
         bottomBar = {
             MainBottomBar(
                 onHomeClick = onNavigateToHome,
-                onPinClick = { /* Implementar lógica para ver notas fijadas */ },
-                onFavoriteClick = { /* Implementar lógica para ver notas favoritas */ },
                 onImageClick = onImageClick,
                 onSaveNoteClick = {
                     if (newNoteTitle.isNotEmpty() && newNoteContent.isNotEmpty()) {
@@ -172,7 +156,6 @@ fun HomeScreen(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            // Lista de notas
         }
     }
 }

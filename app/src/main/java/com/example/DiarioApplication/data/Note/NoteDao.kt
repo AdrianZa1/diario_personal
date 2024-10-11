@@ -20,6 +20,10 @@ interface NoteDao {
     @Update
     suspend fun update(note: Note)
 
+    // Obtener una nota por ID
+    @Query("SELECT * FROM notes WHERE id = :noteId")
+    suspend fun getNoteById(noteId: Int): Note
+
     // Eliminar una nota por ID
     @Query("DELETE FROM notes WHERE id = :noteId")
     suspend fun deleteNoteById(noteId: Int)

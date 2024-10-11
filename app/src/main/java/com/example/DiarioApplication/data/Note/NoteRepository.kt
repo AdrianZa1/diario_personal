@@ -16,21 +16,19 @@ class NoteRepository(private val noteDao: NoteDao) {
         return noteDao.getAllNotes()
     }
 
+    // Obtener una nota por ID
+    suspend fun getNoteById(noteId: Int): Note {
+        return noteDao.getNoteById(noteId)
+    }
+
     // Eliminar una nota por ID
     suspend fun deleteNoteById(noteId: Int) {
         noteDao.deleteNoteById(noteId)
     }
-    suspend fun updateNote(note: Note) {
-        noteDao.update(note) // Asegúrate de tener este método en tu DAO
-    }
-    // Actualizar el estado de "Pin" de una nota
-    suspend fun updatePinState(noteId: Int, isPinned: Boolean) {
-        noteDao.updatePinState(noteId, isPinned)
-    }
 
-    // Actualizar el estado de "Favorito" de una nota
-    suspend fun updateFavoriteState(noteId: Int, isFavorite: Boolean) {
-        noteDao.updateFavoriteState(noteId, isFavorite)
+    // Actualizar el estado de una nota
+    suspend fun updateNote(note: Note) {
+        noteDao.update(note)
     }
 }
 

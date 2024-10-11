@@ -1,17 +1,45 @@
 package com.example.DiarioApplication.ui.vivencia
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.PushPin
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.PushPin
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,7 +49,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.DiarioApplication.data.Note.Note
-import com.example.DiarioApplication.ui.pantalla_principal.NoteItem
 import com.example.inventory.ui.AppViewModelProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,8 +98,7 @@ fun VivenciasScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        // Navegar hacia la pantalla del menú desplegable
-                        navController.navigate("menuScreen")  // Usa la ruta que definiste en el NavHost
+                        navController.navigate("menuScreen")
                     }) {
                         Icon(
                             Icons.Default.Menu,
@@ -145,7 +171,8 @@ fun VivenciasScreen(
                                     navController.navigate("vivenciaDetalle")
                                 },
                                 onPinClick = { vivenciasViewModel.onPinClick(vivencia) },
-                                onAddToFavoritesClick = { vivenciasViewModel.onAddToFavoritesClick(vivencia) }
+                                onAddToFavoritesClick = { vivenciasViewModel.onAddToFavoritesClick(vivencia) },
+                                onDeleteClick = { vivenciasViewModel.eliminarNota(vivencia) } // Nuevo callback para eliminar
                             )
                         }
                     }
@@ -160,7 +187,8 @@ fun VivenciaItem(
     vivencia: Note,
     onClick: () -> Unit,
     onPinClick: () -> Unit,
-    onAddToFavoritesClick: () -> Unit
+    onAddToFavoritesClick: () -> Unit,
+    onDeleteClick: () -> Unit // Nuevo parámetro para manejar la eliminación de la nota
 ) {
     Column(
         modifier = Modifier
@@ -190,6 +218,15 @@ fun VivenciaItem(
                     tint = if (vivencia.isFavorite) Color.Red else Color.Gray
                 )
             }
+            // Botón para eliminar la nota
+            IconButton(onClick = onDeleteClick) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Eliminar Nota",
+                    tint = Color.Red
+                )
+            }
         }
     }
 }
+

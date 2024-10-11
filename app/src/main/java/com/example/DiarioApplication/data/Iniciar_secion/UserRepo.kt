@@ -32,12 +32,4 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun getUserByCredentials(email: String, password: String): User? {
         return userDao.getUserByCredentials(email, password)
     }
-
-
-
-    // Eliminar un usuario por ID (opcional si lo necesitas)
-    suspend fun deleteUserById(userId: Int) {
-        // Aquí puedes llamar a un método que acepte ID en tu UserDao si existe
-        // userDao.deleteUserById(userId)
-    }
 }

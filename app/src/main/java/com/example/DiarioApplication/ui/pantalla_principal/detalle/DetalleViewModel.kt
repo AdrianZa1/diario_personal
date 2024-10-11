@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 
-class NoteViewModel(aplication: Application, private val noteRepository: NoteRepository) : AndroidViewModel(aplication) {
+class NoteViewModel(application: Application, private val noteRepository: NoteRepository) : AndroidViewModel(application) {
 
     // Flow para la última nota
     private val _latestNote = MutableStateFlow<Note?>(null)
@@ -46,4 +46,27 @@ class NoteViewModel(aplication: Application, private val noteRepository: NoteRep
             _latestImageFile.value = files?.maxByOrNull { it.lastModified() }
         }
     }
+
+    // Función para editar una nota existente
+    fun editarNota(noteId: Int, newTitle: String, newContent: String) {
+        viewModelScope.launch {
+            // Obtener la nota existente por ID
+            val existingNote = noteRepository.getNoteById(noteId)
+
+            // Crear una nueva instancia de la nota con los valores actualizados
+            val updatedNote = existingNote.copy(
+                title = newTitle,
+                content = newContent
+            )
+
+            // Actualizar la nota en la base de datos
+            noteRepository.updateNote(updatedNote)
+
+            // Si la nota editada es la misma que la última nota cargada, actualizamos el StateFlow
+            if (_latestNote.value?.id == noteId) {
+                _latestNote.value = updatedNote
+            }
+        }
+    }
 }
+
