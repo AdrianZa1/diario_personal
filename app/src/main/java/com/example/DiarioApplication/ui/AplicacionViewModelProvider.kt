@@ -41,6 +41,12 @@ object AppViewModelProvider {
             val appContainer = inventoryApplication().container
             NoteViewModel(inventoryApplication(), appContainer.noteRepository)
         }
+
+        //Initializer for NoteViewModel
+        initializer {
+            val appContainer = inventoryApplication().container
+            NoteViewModel(inventoryApplication(), appContainer.noteRepository)
+        }
     }
 }
 

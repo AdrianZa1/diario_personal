@@ -70,7 +70,10 @@ fun VivenciasScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = { /* Implementar acción del menú */ }) {
+                    IconButton(onClick = {
+                        // Navegar hacia la pantalla del menú desplegable
+                        navController.navigate("menuScreen")  // Usa la ruta que definiste en el NavHost
+                    }) {
                         Icon(
                             Icons.Default.Menu,
                             contentDescription = "Menu",

@@ -13,6 +13,7 @@ import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
 import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
 import com.example.inventory.ui.inicio_sesion.LoginScreen
 import com.example.inventory.ui.inicio_sesion.RegisterScreen
+import com.example.menu.MenuDesplegableScreen
 
 @Composable
 fun InventoryNavHost(
@@ -61,6 +62,26 @@ fun InventoryNavHost(
             NoteScreen(
                 onHomeClick = { navController.navigate("vivencias") } // Vuelve a la pantalla anterior tras capturar imagen
            )
+        }
+        // Pantalla del menú desplegable
+        composable("menuScreen") {
+            MenuDesplegableScreen(navController = navController)
+        }
+
+        // Ruta para "Nueva Vivencia" que te lleva a la pantalla de Home
+        composable("nuevaVivencia") {
+            HomeScreen(
+                onImageClick = { navController.navigate("camera") },
+                onNavigateToHome = { navController.navigate("vivencias") }
+            )
+        }
+
+        // Ruta para "Cerrar Sesión" que te redirige a la pantalla de Login
+        composable("login") {
+            LoginScreen(
+                onLoginSuccess = { navController.navigate("vivencias") },
+                onNavigateToRegister = { navController.navigate("register") }
+            )
         }
     }
 }

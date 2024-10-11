@@ -18,43 +18,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 
 @Composable
-fun MenuDesplegableScreen() {
+fun MenuDesplegableScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
-            .fillMaxHeight()           // Ocupará todo el alto
-            .fillMaxWidth(0.75f)        // Solo ocupa el 50% del ancho
+            .fillMaxHeight()
+            .fillMaxWidth(0.50f)
             .padding(16.dp)
-            .background(Color(0xFFE1F5FE)) // Fondo celeste claro
+            .background(Color(0xFFE1F5FE))
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
         // Sección de imagen y nombre del usuario
         Row(verticalAlignment = Alignment.CenterVertically) {
-            // Imagen del perfil
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-            ) {
+            Box(modifier = Modifier.size(60.dp)) {
                 Image(
-                    imageVector = Icons.Filled.AccountCircle, // Icono predeterminado de perfil
+                    imageVector = Icons.Filled.AccountCircle,
                     contentDescription = "Profile Image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.background(Color(0xFF81D4FA), shape = CircleShape) // Fondo celeste en la imagen
+                    modifier = Modifier.background(Color(0xFF81D4FA), shape = CircleShape)
                 )
             }
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Nombre y correo
             Column {
                 Text(
                     text = "Nombre Apellido",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
-                    color = Color(0xFF0277BD) // Color de texto celeste oscuro
+                    color = Color(0xFF0277BD)
                 )
                 Text(
                     text = "yourname@gmail.com",
@@ -68,44 +65,44 @@ fun MenuDesplegableScreen() {
 
         // Botón "Mis Vivencias"
         MenuItem(
-            icon = Icons.Filled.FolderOpen,  // Icono de carpeta
-            title = "Mis vivencias",
-            onClick = { /* Acción para abrir mis vivencias */ },
-            iconTint = Color(0xFF0288D1),  // Color de icono celeste
-            textColor = Color(0xFF01579B)  // Color de texto celeste oscuro
+            icon = Icons.Filled.FolderOpen,
+            title = "Mis Vivencias",
+            onClick = { navController.navigate("vivencias") }, // Navegación a "Vivencias"
+            iconTint = Color(0xFF0288D1),
+            textColor = Color(0xFF01579B)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón "Nueva vivencia"
+        // Botón "Nueva Vivencia"
         MenuItem(
-            icon = Icons.Filled.Add,  // Icono para añadir una nueva vivencia
-            title = "Nueva vivencia",
-            onClick = { /* Acción para añadir una nueva vivencia */ },
-            iconTint = Color(0xFF0288D1), // Color de icono celeste
-            textColor = Color(0xFF01579B)  // Color de texto celeste oscuro
+            icon = Icons.Filled.Add,
+            title = "Nueva Vivencia",
+            onClick = { navController.navigate("nuevaVivencia") }, // Navegación a "Home"
+            iconTint = Color(0xFF0288D1),
+            textColor = Color(0xFF01579B)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón "Perfil"
+        // Botón "Perfil" (puedes agregar la lógica si tienes un perfil)
         MenuItem(
-            icon = Icons.Filled.AccountCircle,  // Icono de perfil
+            icon = Icons.Filled.AccountCircle,
             title = "Perfil",
-            onClick = { /* Acción para abrir el perfil */ },
-            iconTint = Color(0xFF0288D1), // Color de icono celeste
-            textColor = Color(0xFF01579B)  // Color de texto celeste oscuro
+            onClick = { navController.navigate("perfil") }, // Placeholder si tienes una pantalla de perfil
+            iconTint = Color(0xFF0288D1),
+            textColor = Color(0xFF01579B)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón "Cerrar sesión"
+        // Botón "Cerrar Sesión"
         MenuItem(
-            icon = Icons.Filled.ExitToApp,  // Icono para cerrar sesión
-            title = "Cerrar sesión",
-            onClick = { /* Acción para cerrar sesión */ },
-            iconTint = Color(0xFF0288D1), // Color de icono celeste
-            textColor = Color(0xFF01579B)  // Color de texto celeste oscuro
+            icon = Icons.Filled.ExitToApp,
+            title = "Cerrar Sesión",
+            onClick = { navController.navigate("login") }, // Navegación a "Login"
+            iconTint = Color(0xFF0288D1),
+            textColor = Color(0xFF01579B)
         )
     }
 }
@@ -135,10 +132,4 @@ fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit, iconTint: Co
             textAlign = TextAlign.Start
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MenuDesplegableScreenPreview() {
-    MenuDesplegableScreen()
 }
