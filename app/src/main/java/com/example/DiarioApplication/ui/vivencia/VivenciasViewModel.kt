@@ -3,6 +3,8 @@ package com.example.DiarioApplication.ui.vivencia
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.DiarioApplication.data.Etiqueta.Etiqueta
+import com.example.DiarioApplication.data.Etiqueta.EtiquetaRepository
 import com.example.DiarioApplication.data.Note.Note
 import com.example.DiarioApplication.data.Note.NoteRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +16,13 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class VivenciasViewModel(private val noteRepository: NoteRepository) : ViewModel() {
+class VivenciasViewModel(
+    private val noteRepository: NoteRepository,
+    private val etiquetaRepository: EtiquetaRepository
+)
+    : ViewModel()
+
+{
 
 
     // Función para obtener las notas directamente del repositorio
@@ -31,10 +39,21 @@ class VivenciasViewModel(private val noteRepository: NoteRepository) : ViewModel
     }
 
     fun onAddToFavoritesClick(note: Note) {
-        // Cambiar el estado de la nota a favorita o no favorita
+
         val updatedNote = note.copy(isFavorite = !note.isFavorite)
+
         viewModelScope.launch {
+
             noteRepository.updateNote(updatedNote)
+
+
+            if (updatedNote.isFavorite) {
+                val etiqueta = Etiqueta(
+                    nombre = note.title,
+                    descripcion = note.content
+                )
+                etiquetaRepository.insertarEtiqueta(etiqueta)
+            }
         }
     }
 

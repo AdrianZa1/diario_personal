@@ -40,7 +40,7 @@ fun InventoryNavHost(
                 onNavigateToLogin = { navController.navigate("login") }
             )
         }
-        composable("cameraa") {
+        composable("camera") {
             CameraScreen(
                 onCustomAction = { navController.navigate("home") } // Volver a la pantalla anterior tras capturar imagen
             )
@@ -57,9 +57,9 @@ fun InventoryNavHost(
                 onNavigateToAddVivencia = { navController.navigate("home") },
             )
         }
-        composable("camera") { // Nueva ruta para la cámara
+        composable("vivenciaDetalle") { // Nueva ruta para la cámara
             NoteScreen(
-                onHomeClick = {  } // Vuelve a la pantalla anterior tras capturar imagen
+                onHomeClick = { navController.navigate("vivencias") } // Vuelve a la pantalla anterior tras capturar imagen
            )
         }
     }

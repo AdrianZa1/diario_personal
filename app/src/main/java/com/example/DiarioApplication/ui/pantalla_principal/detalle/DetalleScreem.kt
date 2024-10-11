@@ -2,6 +2,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.DiarioApplication.ui.NoteViewModel
-import com.example.DiarioApplication.ui.pantalla_principal.HomeViewModel
 import com.example.inventory.ui.AppViewModelProvider
 
 @Composable
@@ -67,7 +67,7 @@ fun NoteScreen(
 
             // Botón para regresar al Home
             IconButton(onClick = onHomeClick) {
-                Icon(Icons.Filled.Home, contentDescription = "Home", tint = Color(0xFF607D8B))
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Home", tint = Color(0xFF607D8B))
             }
         }
     }

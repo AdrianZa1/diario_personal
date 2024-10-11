@@ -139,7 +139,7 @@ fun VivenciasScreen(
                                 vivencia = vivencia,
                                 onClick = {
                                     navController.currentBackStackEntry?.savedStateHandle?.set("vivenciaId", vivencia.id)
-                                    navController.navigate("vivenciaDetail")
+                                    navController.navigate("vivenciaDetalle")
                                 },
                                 onPinClick = { vivenciasViewModel.onPinClick(vivencia) },
                                 onAddToFavoritesClick = { vivenciasViewModel.onAddToFavoritesClick(vivencia) }
