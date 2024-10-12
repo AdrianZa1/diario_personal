@@ -26,7 +26,7 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     // Implementación de userRepository
     override val userRepository: UserRepository by lazy {
-        UserRepository(database.userDao()) // Suponiendo que AppDatabase tiene un método userDao()
+        UserRepository(database.userDao())
     }
 
     // Implementación de noteRepository

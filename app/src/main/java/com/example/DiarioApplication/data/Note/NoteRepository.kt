@@ -26,6 +26,10 @@ class NoteRepository(private val noteDao: NoteDao) {
         noteDao.deleteNoteById(noteId)
     }
 
+    suspend fun deleteAllNotes() {
+        noteDao.deleteAllNotes()
+    }
+
     // Actualizar el estado de una nota
     suspend fun updateNote(note: Note) {
         noteDao.update(note)

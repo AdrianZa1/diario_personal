@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.DiarioApplication.DiarioApplication
 import com.example.DiarioApplication.ui.NoteViewModel
+import com.example.DiarioApplication.ui.configuracion.ConfiguracionViewModel
 import com.example.DiarioApplication.ui.pantalla_principal.HomeViewModel
 import com.example.DiarioApplication.ui.vivencia.VivenciasViewModel
 import com.example.inventory.ui.item.UserEntryViewModel
@@ -57,6 +58,12 @@ object AppViewModelProvider {
         initializer {
             val appContainer = inventoryApplication().container
             MenuViewModel(appContainer.userRepository) // Usa el repository directamente
+        }
+
+        //Inicializador para ConfiguracionViewModel
+        initializer {
+            val appContainer = inventoryApplication().container
+            ConfiguracionViewModel(appContainer.noteRepository)
         }
     }
 }

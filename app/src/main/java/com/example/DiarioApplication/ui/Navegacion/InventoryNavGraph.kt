@@ -6,9 +6,15 @@ import NoteScreen
 import UserProfileScreen // Importamos la pantalla del perfil de usuario
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.DiarioApplication.DiarioApplication
+import com.example.DiarioApplication.ui.configuracion.ConfiguracionScreen
+import com.example.DiarioApplication.ui.configuracion.ConfiguracionViewModel
+import com.example.DiarioApplication.ui.configuracion.ConfiguracionViewModelFactory
 
 import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
 import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
@@ -65,11 +71,16 @@ fun InventoryNavHost(
                 onHomeClick = { navController.navigate("vivencias") } // Vuelve a la pantalla anterior tras capturar imagen
             )
         }
-        composable("menuScreen/{userId}") { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0
-            MenuDesplegableScreen(navController = navController, userId = userId) // Pasar el userId aquí
+        composable("menuScreen") {
+            MenuDesplegableScreen(navController = navController)
         }
-
+        composable(route = "configuracion") {
+            val appContainer = LocalContext.current.applicationContext as DiarioApplication
+            ConfiguracionScreen(
+                navController = navController,
+                noteRepository = appContainer.container.noteRepository // Pasa el repositorio aquí
+            )
+        }
         // Ruta para "Nueva Vivencia" que te lleva a la pantalla de Home
         composable("nuevaVivencia") {
             HomeScreen(
@@ -77,7 +88,6 @@ fun InventoryNavHost(
                 onNavigateToHome = { navController.navigate("vivencias") }
             )
         }
-
         // Ruta para el perfil de usuario
         composable("userProfile/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0

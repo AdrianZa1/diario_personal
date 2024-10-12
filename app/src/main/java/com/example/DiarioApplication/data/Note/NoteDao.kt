@@ -28,6 +28,9 @@ interface NoteDao {
     @Query("DELETE FROM notes WHERE id = :noteId")
     suspend fun deleteNoteById(noteId: Int)
 
+    @Query("DELETE FROM notes")
+    suspend fun deleteAllNotes()
+
     // Actualizar el estado de "Pin" de una nota
     @Query("UPDATE notes SET isPinned = :isPinned WHERE id = :noteId")
     suspend fun updatePinState(noteId: Int, isPinned: Boolean)
