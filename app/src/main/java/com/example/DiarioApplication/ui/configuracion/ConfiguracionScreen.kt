@@ -1,7 +1,8 @@
 package com.example.DiarioApplication.ui.configuracion
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,9 +14,7 @@ import androidx.compose.runtime.LaunchedEffect as LaunchedEffect1
 @Composable
 fun ConfiguracionScreen(
     navController: NavHostController,
-    noteRepository: NoteRepository,
-    isDarkThemeEnabled: Boolean, // Recibe el estado del tema desde la actividad o ViewModel
-    onThemeChange: () -> Unit // Función lambda para cambiar el tema (sin parámetros)
+    noteRepository: NoteRepository // Acepta el repositorio aquí
 ) {
     var message by remember { mutableStateOf("") }
     var isDeleting by remember { mutableStateOf(false) } // Estado para controlar la eliminación
@@ -47,18 +46,6 @@ fun ConfiguracionScreen(
         Text(text = message)
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Cambiar tema oscuro/claro
-        Text(text = "Tema oscuro")
-        Switch(
-            checked = isDarkThemeEnabled,
-            onCheckedChange = {
-                onThemeChange() // Llama a la función para cambiar el tema sin parámetros
-            }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         // Botón para volver a la pantalla anterior
         Button(onClick = {
             navController.popBackStack() // Volver a la pantalla anterior
