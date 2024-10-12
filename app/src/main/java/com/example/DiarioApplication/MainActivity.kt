@@ -30,27 +30,41 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import com.example.DiarioApplication.data.Note.NoteRepository
 import com.example.DiarioApplication.ui.navigation.InventoryNavHost
 import com.example.DiarioApplication.ui.theme.InventoryTheme
 import com.example.inventory.R
 import kotlinx.coroutines.delay
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            InventoryTheme {
+            // Variable para controlar si el tema oscuro está activado o no
+            var isDarkThemeEnabled by remember { mutableStateOf(false) }
+
+            // Función para alternar el tema
+            val onThemeChange = {
+                isDarkThemeEnabled = !isDarkThemeEnabled
+            }
+
+            InventoryTheme(darkTheme = isDarkThemeEnabled) { // Se utiliza el tema dinámicamente
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    // Llama a la función InventoryNavHost y le pasa el navController
-                    InventoryNavHost(
-                        navController = navController
-                    )
+
+                    // Mostrar el SplashScreen primero
+                    SplashScreen {
+                        // Luego del SplashScreen, navega a la siguiente pantalla
+                        InventoryNavHost(
+                            navController = navController,
+                            isDarkThemeEnabled = isDarkThemeEnabled, // Pasamos el estado del tema
+                            onThemeChange = onThemeChange // Función para cambiar el tema
+                        )
+                    }
                 }
             }
         }
@@ -60,11 +74,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SplashScreen(onTimeout: @Composable () -> Unit) {
     var isTimeOut by remember { mutableStateOf(false) }
+    var progress by remember { mutableStateOf(0f) }
 
     // Simula un tiempo de espera de 3 segundos para el splash screen
     LaunchedEffect(Unit) {
-        delay(3000) // 3 segundos de espera
-        isTimeOut = true
+        // Animación para incrementar el progreso en 3 segundos
+        val duration = 3000 // 3 segundos
+        val steps = 100 // Pasos para incrementar el progreso
+        val interval = duration / steps.toLong() // Intervalo de tiempo entre cada incremento
+        for (i in 1..steps) {
+            delay(interval) // Espera entre cada incremento
+            progress = i / steps.toFloat() // Calcula el progreso actual
+        }
+        isTimeOut = true // Después de 3 segundos, establece que el tiempo ha expirado
     }
 
     if (isTimeOut) {
@@ -74,10 +96,14 @@ fun SplashScreen(onTimeout: @Composable () -> Unit) {
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center, // Centra verticalmente todo el contenido
+                modifier = Modifier.fillMaxSize()
+            ) {
                 // Ícono de la app
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground), // Asegúrate de tener este recurso
+                    painter = painterResource(id = R.mipmap.ic_logo_foreground),
                     contentDescription = "App Icon",
                     modifier = Modifier.size(128.dp)
                 )
@@ -88,9 +114,21 @@ fun SplashScreen(onTimeout: @Composable () -> Unit) {
                     text = "DIARIO PERSONAL\nTus pensamientos, siempre contigo",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = MaterialTheme.colorScheme.onBackground, // Usa el color dependiendo del tema
                     modifier = Modifier.padding(top = 16.dp),
                     textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Progreso horizontal animado centrado
+                LinearProgressIndicator(
+                    progress = progress, // Asigna el valor de progreso actual
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f) // Ajusta el tamaño al 80% del ancho de la pantalla
+                        .height(8.dp),
+                    color = MaterialTheme.colorScheme.primary, // Color del indicador de progreso
+                    trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f) // Fondo del indicador
                 )
             }
         }

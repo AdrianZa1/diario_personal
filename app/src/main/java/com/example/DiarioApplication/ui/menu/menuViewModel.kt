@@ -19,18 +19,19 @@ sealed class MenuRoutes(val route: String) {
 
 // ViewModel para manejar las acciones del menú
 class MenuViewModel(private val userRepository: UserRepository): ViewModel() {
-
-    // LiveData para almacenar el usuario actual
-    private val _currentUser = MutableLiveData<User?>()
-    val currentUser: LiveData<User?> = _currentUser
-
-    // Función para cargar el usuario actual
-    fun loadCurrentUser(userId: Int) {
-        viewModelScope.launch {
-            userRepository.getUserById(userId).collect { user ->
-                _currentUser.value = user
-            }
-        }
+    private val _navigationEvent = MutableLiveData<MenuRoutes>()
+    val navigationEvent: LiveData<MenuRoutes> = _navigationEvent
+    fun onMisVivenciasClick() {
+        _navigationEvent.value = MenuRoutes.MisVivencias
+    }
+    fun onNuevaVivenciaClick() {
+        _navigationEvent.value = MenuRoutes.NuevaVivencia
+    }
+    fun onPerfilClick() {
+        _navigationEvent.value = MenuRoutes.Perfil
+    }
+    fun onCerrarSesionClick() {
+        // Aquí puedes manejar el evento de cerrar sesión, por ejemplo, limpiar datos o navegar al login
     }
 }
 

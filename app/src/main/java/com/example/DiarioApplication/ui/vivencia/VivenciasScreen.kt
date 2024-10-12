@@ -62,11 +62,12 @@ fun VivenciasScreen(
 
     var isSearching by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
+    var isFilteringFavorites by remember { mutableStateOf(false) }  // Estado para filtrar por favoritos
 
-    val filteredVivencias = if (searchText.isEmpty()) {
-        vivencias
-    } else {
-        vivencias.filter { it.title.contains(searchText, ignoreCase = true) || it.content.contains(searchText, ignoreCase = true) }
+    val filteredVivencias = vivencias.filter { vivencia ->
+        val matchesSearch = searchText.isEmpty() || vivencia.title.contains(searchText, ignoreCase = true) || vivencia.content.contains(searchText, ignoreCase = true)
+        val matchesFavorites = !isFilteringFavorites || vivencia.isFavorite
+        matchesSearch && matchesFavorites
     }
 
     Scaffold(
@@ -108,6 +109,7 @@ fun VivenciasScreen(
                     }
                 },
                 actions = {
+                    // Botón de búsqueda
                     IconButton(
                         onClick = {
                             isSearching = !isSearching
@@ -119,6 +121,19 @@ fun VivenciasScreen(
                         Icon(
                             if (isSearching) Icons.Default.Close else Icons.Default.Search,
                             contentDescription = if (isSearching) "Cerrar búsqueda" else "Buscar",
+                            tint = Color.White
+                        )
+                    }
+
+                    // Botón de favoritos
+                    IconButton(
+                        onClick = {
+                            isFilteringFavorites = !isFilteringFavorites
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (isFilteringFavorites) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (isFilteringFavorites) "Mostrar todas las vivencias" else "Mostrar solo favoritos",
                             tint = Color.White
                         )
                     }
@@ -172,7 +187,7 @@ fun VivenciasScreen(
                                 },
                                 onPinClick = { vivenciasViewModel.onPinClick(vivencia) },
                                 onAddToFavoritesClick = { vivenciasViewModel.onAddToFavoritesClick(vivencia) },
-                                onDeleteClick = { vivenciasViewModel.eliminarNota(vivencia) } // Nuevo callback para eliminar
+                                onDeleteClick = { vivenciasViewModel.eliminarNota(vivencia) } // Callback para eliminar
                             )
                         }
                     }
@@ -181,6 +196,7 @@ fun VivenciasScreen(
         }
     )
 }
+
 
 @Composable
 fun VivenciaItem(

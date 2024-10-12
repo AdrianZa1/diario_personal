@@ -6,9 +6,12 @@ import NoteScreen
 import UserProfileScreen // Importamos la pantalla del perfil de usuario
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.DiarioApplication.DiarioApplication
+import com.example.DiarioApplication.ui.configuracion.ConfiguracionScreen
 
 import com.example.DiarioApplication.ui.pantalla_principal.HomeScreen
 import com.example.DiarioApplication.ui.vivencia.VivenciasScreen
@@ -20,7 +23,9 @@ import com.example.menu.MenuDesplegableScreen
 @Composable
 fun InventoryNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isDarkThemeEnabled: Boolean,
+    onThemeChange: () -> Unit // Función para alternar el tema
 ) {
     NavHost(
         navController = navController,
@@ -65,11 +70,17 @@ fun InventoryNavHost(
                 onHomeClick = { navController.navigate("vivencias") } // Vuelve a la pantalla anterior tras capturar imagen
             )
         }
-        composable("menuScreen/{userId}") { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0
-            MenuDesplegableScreen(navController = navController, userId = userId) // Pasar el userId aquí
+        composable("menuScreen") {
+            MenuDesplegableScreen(navController = navController)
         }
-
+        composable("configuracion") {
+            ConfiguracionScreen(
+                navController = navController,
+                noteRepository = (LocalContext.current.applicationContext as DiarioApplication).container.noteRepository,
+                isDarkThemeEnabled = isDarkThemeEnabled, // Pasa el valor del tema
+                onThemeChange = onThemeChange // Pasa la función de cambio de tema
+            )
+        }
         // Ruta para "Nueva Vivencia" que te lleva a la pantalla de Home
         composable("nuevaVivencia") {
             HomeScreen(
@@ -77,7 +88,6 @@ fun InventoryNavHost(
                 onNavigateToHome = { navController.navigate("vivencias") }
             )
         }
-
         // Ruta para el perfil de usuario
         composable("userProfile/{userId}") { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId")?.toIntOrNull() ?: 0

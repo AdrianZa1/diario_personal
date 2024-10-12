@@ -1,57 +1,54 @@
 package com.example.menu
 
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.inventory.ui.AppViewModelProvider
-import com.example.inventory.ui.item.UserEntryViewModel
 
 @Composable
-fun MenuDesplegableScreen(
-    navController: NavHostController,
-    userId: Int, // Asegúrate de recibir el userId
-    viewModel: MenuViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
-    // Cargar el usuario actual
-    LaunchedEffect(userId) {
-        viewModel.loadCurrentUser(userId)
-    }
-
-    val currentUser by viewModel.currentUser.observeAsState() // Observa el usuario actual
-
+fun MenuDesplegableScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth(0.50f)
+            .fillMaxWidth(0.75f)
             .padding(16.dp)
             .background(Color(0xFFE1F5FE))
     ) {
         Spacer(modifier = Modifier.height(20.dp))
-
         // Sección de imagen y nombre del usuario
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Box(modifier = Modifier.size(60.dp)) {
+            Box(
+                modifier = Modifier.size(60.dp)
+            ) {
                 Image(
                     imageVector = Icons.Filled.AccountCircle,
                     contentDescription = "Profile Image",
@@ -59,71 +56,63 @@ fun MenuDesplegableScreen(
                     modifier = Modifier.background(Color(0xFF81D4FA), shape = CircleShape)
                 )
             }
-
             Spacer(modifier = Modifier.width(16.dp))
-
-            // Mostrar el nombre de usuario y correo electrónico
             Column {
                 Text(
-                    text = currentUser?.username ?: "Nombre Apellido", // Muestra el username o un placeholder
+                    text = "Nombre Apellido",
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = Color(0xFF0277BD)
                 )
                 Text(
-                    text = currentUser?.email ?: "yourname@gmail.com", // Muestra el email o un placeholder
+                    text = "yourname@gmail.com",
                     fontSize = 14.sp,
                     color = Color.Gray
                 )
             }
         }
-
         Spacer(modifier = Modifier.height(30.dp))
-
-        // Botón "Mis Vivencias"
         MenuItem(
-            icon = Icons.Filled.FolderOpen,
-            title = "Mis Vivencias",
-            onClick = { navController.navigate("vivencias") }, // Navegación a "Vivencias"
+            icon = Icons.Filled.Folder,
+            title = "Mis vivencias",
+            onClick = { navController.navigate("vivencias") },
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Botón "Nueva Vivencia"
         MenuItem(
             icon = Icons.Filled.Add,
-            title = "Nueva Vivencia",
-            onClick = { navController.navigate("nuevaVivencia") }, // Navegación a "Nueva Vivencia"
+            title = "Nueva vivencia",
+            onClick = { navController.navigate("nuevaVivencia") },
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Botón "Perfil"
         MenuItem(
             icon = Icons.Filled.AccountCircle,
             title = "Perfil",
-            onClick = { navController.navigate("userProfile/{userId}") }, // Navegación a la pantalla de perfil
+            onClick = { navController.navigate("userProfile/{userId}") }, // Navegación al perfil
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Botón "Cerrar Sesión"
+        MenuItem(
+            icon = Icons.Filled.Settings,
+            title = "Configuración",
+            onClick = { navController.navigate("configuracion") }, // Navegación a la configuración
+            iconTint = Color(0xFF0288D1),
+            textColor = Color(0xFF01579B)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         MenuItem(
             icon = Icons.Filled.ExitToApp,
-            title = "Cerrar Sesión",
-            onClick = { navController.navigate("login") }, // Navegación a "Login"
+            title = "Cerrar sesión",
+            onClick = { navController.navigate("login") }, // Navegación para cerrar sesión
             iconTint = Color(0xFF0288D1),
             textColor = Color(0xFF01579B)
         )
     }
 }
-
 
 
 @Composable
@@ -152,4 +141,3 @@ fun MenuItem(icon: ImageVector, title: String, onClick: () -> Unit, iconTint: Co
         )
     }
 }
-

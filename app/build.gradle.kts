@@ -51,8 +51,10 @@ android {
 }
 
 dependencies {
-    // Import the Compose BOM
+    // Import the Compose BOM for version management
     implementation(platform("androidx.compose:compose-bom:2023.10.01"))
+
+    // Jetpack Compose libraries
     implementation("androidx.activity:activity-compose:1.8.1")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui")
@@ -61,26 +63,26 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.5")
-    implementation ("androidx.compose.material:material-icons-extended:1.5.1")
-    implementation ("io.coil-kt:coil-compose:2.0.0")
-    //Room
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation("io.coil-kt:coil-compose:2.0.0")
+
+    // Room components
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.test:monitor:1.6.1")
+    implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
+    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
+
+    // Camera dependencies
     implementation("androidx.camera:camera-lifecycle:1.3.4")
     implementation("androidx.camera:camera-view:1.3.4")
     implementation("androidx.camera:camera-camera2:1.3.4")
 
+    // Generative AI client
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
-    implementation("androidx.compose.runtime:runtime-livedata:1.7.3")
-    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
-    implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
 
-    // Testing
+    // Other dependencies
+    implementation("androidx.core:core-ktx:1.12.0")
+
+    // Testing dependencies
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-
-
-
-
 }
