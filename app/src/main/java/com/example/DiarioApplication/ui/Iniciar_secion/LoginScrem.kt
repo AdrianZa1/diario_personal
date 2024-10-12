@@ -19,7 +19,7 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    // Obtenemos el estado del mensaje de error del ViewModel
+
     val loginError by viewModel.loginError.collectAsState()
 
     Column(

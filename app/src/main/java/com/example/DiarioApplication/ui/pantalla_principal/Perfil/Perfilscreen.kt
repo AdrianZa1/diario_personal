@@ -10,30 +10,20 @@ import com.example.inventory.ui.AppViewModelProvider
 
 @Composable
 fun UserProfileScreen(
-    userId: Int, // El ID del usuario que inició sesión
     viewModel: UserProfileViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    onBackClick: () -> Unit // Callback para manejar el evento de volver atrás
+    onBackClick: () -> Unit,
+    userId: Int
 ) {
-    // Estados para el correo y la contraseña
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
-
-    // Obtenemos el perfil del usuario desde el ViewModel
+    // Estados observables desde el ViewModel
     val userProfile by viewModel.userProfile.collectAsState()
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val confirmPassword by viewModel.confirmPassword.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
 
-    // Cargar los datos del usuario cuando la pantalla se monta
-    LaunchedEffect(userId) {
-        viewModel.loadUserProfile(userId)
-    }
-
-    // Actualizar el estado de los campos cuando los datos del usuario cambian
-    LaunchedEffect(userProfile) {
-        userProfile?.let {
-            email = it.email
-            password = it.password // Cargar la contraseña existente
-        }
+    // Cargar el perfil del usuario al iniciar la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.loadUserProfile() // Esto carga el perfil desde el ViewModel
     }
 
     Column(
@@ -52,7 +42,7 @@ fun UserProfileScreen(
         // Campo de correo electrónico
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = { viewModel.onEmailChanged(it) }, // Cambiar directamente en el ViewModel
             label = { Text("Correo electrónico") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -61,7 +51,7 @@ fun UserProfileScreen(
         // Campo de contraseña
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = { viewModel.onPasswordChanged(it) }, // Cambiar directamente en el ViewModel
             label = { Text("Contraseña") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation() // Ocultar el texto de la contraseña
@@ -71,7 +61,7 @@ fun UserProfileScreen(
         // Campo para confirmar la nueva contraseña
         OutlinedTextField(
             value = confirmPassword,
-            onValueChange = { confirmPassword = it },
+            onValueChange = { viewModel.onConfirmPasswordChanged(it) }, // Cambiar directamente en el ViewModel
             label = { Text("Confirmar contraseña") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation() // Ocultar el texto de la contraseña
@@ -88,17 +78,10 @@ fun UserProfileScreen(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
+        // Botón para actualizar los datos del usuario
         Button(
             onClick = {
-                if (password == confirmPassword) {
-                    userProfile?.let { user ->
-                        // Actualizar correo y contraseña
-                        viewModel.updateEmailAndPassword(user, email, password)
-                        errorMessage = null // Limpiar mensaje de error si todo está bien
-                    }
-                } else {
-                    errorMessage = "Las contraseñas no coinciden"
-                }
+                viewModel.updateUserProfile()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -116,4 +99,3 @@ fun UserProfileScreen(
         }
     }
 }
-

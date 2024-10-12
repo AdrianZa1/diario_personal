@@ -1,6 +1,6 @@
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.DiarioApplication.data.Etiqueta.EtiquetaRepository
-import com.example.DiarioApplication.data.Etiqueta.OfflineEtiquetaRepository
 import com.example.DiarioApplication.data.Note.NoteRepository
 import com.example.inventory.data.AppDatabase
 import com.example.inventory.data.OfflineUserRepository
@@ -13,16 +13,20 @@ interface AppContainer {
     val userRepository: UserRepository
     val noteRepository: NoteRepository
     val etiquetaRepository: EtiquetaRepository
+    val sharedPreferences: SharedPreferences // Nueva propiedad para las preferencias
 }
 
-
-
 /**
- * [UserContainer] implementation that provides instance of [OfflineItemsRepository]
+ * [DefaultAppContainer] provides instances of repositories and SharedPreferences.
  */
 class DefaultAppContainer(context: Context) : AppContainer {
+
     // Inicialización de la base de datos
     private val database = AppDatabase.getDatabase(context)
+
+    // Inicialización de SharedPreferences
+    override val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
 
     // Implementación de userRepository
     override val userRepository: UserRepository by lazy {
@@ -38,16 +42,4 @@ class DefaultAppContainer(context: Context) : AppContainer {
     override val etiquetaRepository: EtiquetaRepository by lazy {
         EtiquetaRepository(database.etiquetaDao())
     }
-
-    // Implementación adicional si lo necesitas
-    val offlineEtiquetaRepository: OfflineEtiquetaRepository by lazy {
-        OfflineEtiquetaRepository(etiquetaRepository)
-    }
 }
-
-
-
-
-
-
-

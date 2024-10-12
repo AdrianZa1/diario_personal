@@ -1,37 +1,41 @@
 package com.example.menu
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.inventory.data.UserRepository
-import com.tuapp.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-// Definimos las rutas de navegación
 sealed class MenuRoutes(val route: String) {
-    object MisVivencias : MenuRoutes("mis_vivencias")
-    object NuevaVivencia : MenuRoutes("nueva_vivencia")
-    object Perfil : MenuRoutes("perfil")
+    object MisVivencias : MenuRoutes("vivencias") // Ruta corregida
+    object NuevaVivencia : MenuRoutes("nuevaVivencia")
+    data class Perfil(val userId: Int) : MenuRoutes("userProfile/$userId")
 }
 
-// ViewModel para manejar las acciones del menú
-class MenuViewModel(private val userRepository: UserRepository): ViewModel() {
-    private val _navigationEvent = MutableLiveData<MenuRoutes>()
-    val navigationEvent: LiveData<MenuRoutes> = _navigationEvent
-    fun onMisVivenciasClick() {
-        _navigationEvent.value = MenuRoutes.MisVivencias
-    }
-    fun onNuevaVivenciaClick() {
-        _navigationEvent.value = MenuRoutes.NuevaVivencia
-    }
-    fun onPerfilClick() {
-        _navigationEvent.value = MenuRoutes.Perfil
-    }
+class MenuViewModel(
+    private val userRepository: UserRepository,
+    private val preferences: SharedPreferences
+) : ViewModel() {
+
+    private val _userName = MutableStateFlow(preferences.getString("user_name", "") ?: "")
+    val userName: StateFlow<String> = _userName.asStateFlow()
+
+    private val _userEmail = MutableStateFlow(preferences.getString("user_email", "") ?: "")
+    val userEmail: StateFlow<String> = _userEmail.asStateFlow()
+
     fun onCerrarSesionClick() {
-        // Aquí puedes manejar el evento de cerrar sesión, por ejemplo, limpiar datos o navegar al login
+        viewModelScope.launch {
+            preferences.edit().clear().apply()
+        }
+    }
+
+    fun refreshUserInfo() {
+        viewModelScope.launch {
+            _userName.value = preferences.getString("user_name", "") ?: ""
+            _userEmail.value = preferences.getString("user_email", "") ?: ""
+        }
     }
 }
-

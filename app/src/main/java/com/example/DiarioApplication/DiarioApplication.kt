@@ -13,3 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package com.example.DiarioApplication
+
+import AppContainer
+import DefaultAppContainer
+import android.app.Application
+
+
+
+class DiarioApplication : Application() {
+
+    // Contenedor unificado de dependencias
+    lateinit var container: AppContainer
+        private set  // Evitar modificaciones externas
+
+    override fun onCreate() {
+        super.onCreate()
+        // Inicializamos el contenedor con el contexto de la aplicación
+        container = DefaultAppContainer(this)
+    }
+}
+

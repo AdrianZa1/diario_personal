@@ -27,13 +27,19 @@ object AppViewModelProvider {
         // Inicializador para LoginViewModel
         initializer {
             val appContainer = inventoryApplication().container
-            LoginViewModel(appContainer.userRepository)
+            LoginViewModel(
+            userRepository = appContainer.userRepository,
+            preferences = appContainer.sharedPreferences
+            )
         }
 
         // Inicializador para UserProfileViewModel
         initializer {
             val appContainer = inventoryApplication().container
-            UserProfileViewModel(appContainer.userRepository)
+            UserProfileViewModel(
+                userRepository = appContainer.userRepository,
+                preferences = appContainer.sharedPreferences
+            )
         }
 
         // Inicializador para HomeViewModel
@@ -57,7 +63,8 @@ object AppViewModelProvider {
         // Inicializador para MenuViewModel
         initializer {
             val appContainer = inventoryApplication().container
-            MenuViewModel(appContainer.userRepository) // Usa el repository directamente
+            MenuViewModel(userRepository = appContainer.userRepository,
+                preferences = appContainer.sharedPreferences) // Usa el repository directamente
         }
 
         //Inicializador para ConfiguracionViewModel
