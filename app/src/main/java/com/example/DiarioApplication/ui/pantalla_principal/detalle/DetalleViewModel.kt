@@ -69,4 +69,3 @@ class NoteViewModel(application: Application, private val noteRepository: NoteRe
         }
     }
 }
-

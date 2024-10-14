@@ -28,8 +28,8 @@ object AppViewModelProvider {
         initializer {
             val appContainer = inventoryApplication().container
             LoginViewModel(
-            userRepository = appContainer.userRepository,
-            preferences = appContainer.sharedPreferences
+                userRepository = appContainer.userRepository,
+                preferences = appContainer.sharedPreferences
             )
         }
 
@@ -81,4 +81,3 @@ object AppViewModelProvider {
  */
 fun CreationExtras.inventoryApplication(): DiarioApplication =
     (this[AndroidViewModelFactory.APPLICATION_KEY] as DiarioApplication)
-

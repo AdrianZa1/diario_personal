@@ -102,6 +102,16 @@ fun MenuDesplegableScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         MenuItem(
+            icon = Icons.Filled.Settings,  // Icono de configuración
+            title = "Configuración",
+            onClick = { navController.navigate("configuracion") },  // Navegación a Configuración
+            iconTint = Color(0xFF0288D1),
+            textColor = Color(0xFF01579B)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        MenuItem(
             icon = Icons.Filled.ExitToApp,
             title = "Cerrar sesión",
             onClick = {
