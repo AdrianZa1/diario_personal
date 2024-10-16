@@ -29,5 +29,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Diario Personal"
+rootProject.name = "Inventory"
 include(":app")
